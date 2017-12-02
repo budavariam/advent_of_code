@@ -16,6 +16,11 @@ def solution(input_str):
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
-    PARSER.add_argument("echo")
+    PARSER.add_argument("--input", dest='input', action='store_true')
+    PARSER.add_argument("--test")
     ARGS = PARSER.parse_args()
-    print(solution(ARGS.echo))
+    if ARGS.input:
+        with(open('input.txt', 'rb')) as input_file:
+            print(solution(input_file.read()))
+    else:
+        print(solution(str(ARGS.test)))
