@@ -1,8 +1,6 @@
-""" Advent of code 2017	day 2/2	"""
+""" Advent of code 2017	day 3/1	"""
 
 from argparse import ArgumentParser
-from functools import reduce
-from itertools import combinations
 
 def start_point(upper_int):
     """ Get the circle that this element is in, and its first elem """

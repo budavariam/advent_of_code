@@ -1,4 +1,4 @@
-""" Advent of code 2017	day 2/2	"""
+""" Advent of code 2017	day 3/1	"""
 
 import unittest
 from code import solution, start_point, count_y, side_pos
