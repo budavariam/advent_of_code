@@ -1,6 +1,7 @@
 """ Advent of code 2017	day 4/1	"""
 
 from argparse import ArgumentParser
+from functools import reduce
 
 def is_valid(line):
     tokens = line.split(" ")
@@ -8,11 +9,7 @@ def is_valid(line):
 
 def solution(input_data):
     """ Solution to the problem """
-    lines = input_data.split("\n")
-    valid = 0
-    for line in lines:
-        valid += 1 if is_valid(lines) else 0
-    return valid
+    return reduce(lambda acc, line: acc + (1 if is_valid(line) else 0), input_data.split("\n"), 0)
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
