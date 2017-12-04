@@ -8,7 +8,6 @@ class MyTest(unittest.TestCase):
 
     def test_match(self):
         """ The basic test cases """
-        self.assertEqual(solution(1), 2)
         self.assertEqual(solution(2), 4)
         self.assertEqual(solution(3), 4)
         self.assertEqual(solution(4), 5)
