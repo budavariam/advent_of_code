@@ -65,9 +65,13 @@ def cpn(prev_list, prev_level, curr_index, curr_div, curr_mod):
                 # One before the right corner
                 corner = curr_mod - 1
                 return sum(prev_list[corner-1: corner+1])
-            # Corner value
-            first_corner = curr_mod - 2
-            return prev_list[first_corner]
+            elif curr_mod == largest_mod:
+                # Corner value
+                first_corner = curr_mod - 2
+                return prev_list[first_corner]
+            # Three neighbours
+            prev_max = curr_index
+            return sum(prev_list[prev_max - 2: prev_max + 1])
 
 def calc_value(curr_start, curr, curr_list, prev_list, prev_level):
     """ Calculate the current value from the currently existing neighbours """
