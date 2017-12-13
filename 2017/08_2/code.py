@@ -7,7 +7,8 @@ import re
 class Memory(object):
     """ Graph node that has a name, weight and children """
 
-    def eval_cond(self, reg, sign, value):
+    @staticmethod
+    def eval_cond(reg, sign, value):
         """ evaluate the condition """
         return {
             '<': lambda val: reg < val,
