@@ -1,83 +1,89 @@
 """ Advent of code 2017	day 9/1	"""
 
 from argparse import ArgumentParser
-from collections import defaultdict
 from enum import Enum
 from functools import reduce
-import re
 
 VERBOSE = False
 
 class State(Enum):
-   GARBAGED = 1
-   ESCAPED = 2
-   NORMAL = 3
-
-class Group(object):
-    def __init__(self):
-        """ Constructor """
-        self.total_score = 0
-        self.children = []
+    """ State for the Stream """
+    GARBAGED = 1
+    ESCAPED = 2
+    NORMAL = 3
 
 class Stream(object):
     """ Stream of data that has garbage """
 
     def enter_escaped(self):
         """ Set to escaped state and save the prev state if appropriate """
-        if VERBOSE: print("--enter_escaped")
+        if VERBOSE:
+            print("--enter_escaped")
         if self.state != State.ESCAPED:
             self.prev_nonesc_state = self.state
         self.state = State.ESCAPED
 
     def leave_escaped(self):
         """ Leave escaped mode """
-        if VERBOSE: print("--leave_escaped")
+        if VERBOSE:
+            print("--leave_escaped")
         self.state = self.prev_nonesc_state
 
     def enter_group(self):
         """ Entered into a new group in normal mode"""
-        if VERBOSE: print("--enter_group")
+        if VERBOSE:
+            print("--enter_group")
         self.group_level += 1
         self.groups.append(self.group_level)
 
     def leave_group(self):
         """ Leave a group in normal mode """
-        if VERBOSE: print("--leave_group")
+        if VERBOSE:
+            print("--leave_group")
         self.group_level -= 1
 
     def enter_garbage(self):
         """ Enter garbage mode """
-        if VERBOSE: print("--enter_garbage")
+        if VERBOSE:
+            print("--enter_garbage")
         self.state = State.GARBAGED
         self.prev_nonesc_state = State.GARBAGED
 
     def leave_garbage(self):
         """ Leave garbage mode """
-        if VERBOSE: print("--leave_garbage")
+        if VERBOSE:
+            print("--leave_garbage")
         self.normal_mode()
 
     def normal_mode(self):
         """ Leave garbage mode """
-        if VERBOSE: print("--normal_mode")
+        if VERBOSE:
+            print("--normal_mode")
         self.state = State.NORMAL
         self.prev_nonesc_state = State.NORMAL
-    
+
     def __repr__(self):
-        return "[{}({})l:{}, g:{}]".format(self.state, self.prev_nonesc_state, self.group_level, self.groups)
+        return "{}({}) level:{} groups: {}".format(
+            self.state,
+            self.prev_nonesc_state,
+            self.group_level,
+            self.groups)
 
     def process_data(self):
         """ Process the text in the stream """
         for char in self.data:
-            if VERBOSE: print("{} - {}".format(char, self))
+            if VERBOSE:
+                print("{} - {}".format(char, self))
             if self.state == State.ESCAPED:
                 self.leave_escaped()
             elif self.state == State.GARBAGED:
                 if char in self.garbaged_behaviour:
-                    self.garbaged_behaviour[char]()                
+                    self.garbaged_behaviour[char]()
             elif self.state == State.NORMAL:
                 if char in self.normal_behaviour:
                     self.normal_behaviour[char]()
-        if VERBOSE: print(self)
+        if VERBOSE:
+            print(self)
 
     def total_score(self):
         """ return the total score of the groups """
