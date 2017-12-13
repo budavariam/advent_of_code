@@ -1,7 +1,7 @@
 """ Advent of code 2017	day 7/2	"""
 
 from argparse import ArgumentParser
-from collections import deque
+from collections import deque, defaultdict
 from functools import reduce
 import re
 
@@ -36,25 +36,47 @@ def get_top_node(data):
         [child_nodes.add(elem) for elem in node.children]
     return list(filter(lambda node_name: node_name not in child_nodes, data.keys()))
 
+def fix_data(data):
+    """ Fix the wrongly weighted element """
+    histogram = defaultdict(int)
+    for elem in data:
+        histogram[elem.sum_weight] += 1
+    single_value = list(filter(lambda elem: elem[1] == 1, histogram.items()))[0][0]
+    other_values = list(filter(lambda elem: elem[1] != 1, histogram.items()))[0][0]
+    single_index, single_elem = list(filter(lambda elem: elem[1].sum_weight == single_value, enumerate(data)))[0]
+    difference = single_value - other_values
+    single_fixed_weight = single_elem.weight - difference
+    print("{}'s weight should be fixed to: {}".format(single_elem.name, single_fixed_weight))
+    fixed_data = data
+    single_elem.weight = single_fixed_weight
+    single_elem.sum_weight -= difference
+    fixed_data[single_index] = single_elem
+    return fixed_data
+
 def build_tree(top, data):
+    """ Build a tree from the given data """
     tree = data[top]
+    tree.sum_weight = tree.weight
     if tree.children:
-        tree.children = [build_tree(child, data) for child in tree.children]
-        tree.sum_weight = tree.weight + reduce(lambda acc, x: acc+x.weight, tree.children, 0)
-    print("{}".format(data[top]))
+        new_children = []
+        child_sizes = []
+        for child in tree.children:
+            child_tree = build_tree(child, data)
+            new_children.append(child_tree)
+            child_sizes.append(child_tree.sum_weight)
+        if len(set(child_sizes))>1:
+            new_children = fix_data(new_children)                
+        tree.children = new_children
+        tree.sum_weight = reduce(lambda acc, elem: elem.sum_weight + acc, new_children, tree.weight)
+    #print("{}".format(data[top]))
     return tree
-
-def get_uneven_data(tree):
-
-    return 0
 
 def solution(input_data):
     """ Solution to the problem """
     data = dict(read_data(input_data))
     top_node = get_top_node(data)[0]
-    #top_node = 'hlhomy'
     tree = build_tree(top_node, data)
-    return get_uneven_data(tree)
+    return tree
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
