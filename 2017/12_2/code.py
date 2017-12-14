@@ -14,7 +14,7 @@ class Network(object):
     """ Representation of the network """
     def __init__(self, data):
         """ Constructor of the node """
-        self.nodes =  self.parse_input(data)
+        self.nodes = self.parse_input(data)
 
     @staticmethod
     def parse_input(data):
