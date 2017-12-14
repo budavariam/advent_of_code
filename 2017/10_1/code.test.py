@@ -1,4 +1,4 @@
-""" Advent of code 2017	day 10/1	"""
+""" Advent of code 2017	day 10/1 """
 
 import unittest
 from code import solution

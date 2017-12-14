@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 
 class Knot(object):
-    """ Stream of data that has garbage """
+    """ Knot hash algorithm """
 
     @staticmethod
     def read_data(data):
