@@ -62,15 +62,18 @@ class Knot(object):
         """ Get the knot hash """
         return ''.join([format(num, '02x') for num in dense])
 
+    def knot_hash(self):
+        """ Implement the hashing algorithm """
+        for _ in range(64):
+            self.process_data()
+        sparse_hash = self.data
+        dense_hash = self.dense(sparse_hash)
+        knot_hash = self.hexize(dense_hash)
+        return knot_hash
+
 def solution(domain_size, input_data):
     """ Solution to the problem """
-    knot = Knot(domain_size, input_data)
-    for _ in range(64):
-        knot.process_data()
-    sparse_hash = knot.data
-    dense_hash = knot.dense(sparse_hash)
-    knot_hash = knot.hexize(dense_hash)
-    return knot_hash
+    return Knot(domain_size, input_data).knot_hash()
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
