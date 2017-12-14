@@ -24,9 +24,9 @@ class HexGrid(object):
         }
 
     @staticmethod
-    def parse_input(input):
+    def parse_input(data):
         """ Load the travel data """
-        return input.split(',')
+        return data.split(',')
 
     @staticmethod
     def distance(start, end):
@@ -37,8 +37,8 @@ class HexGrid(object):
 
     def count_steps(self):
         """ Count the different directions """
-        start = (0,0)
-        current = (0,0)
+        start = (0, 0)
+        current = (0, 0)
         for direction in self.data:
             self.steps[direction] += 1
             current = tuple(map(sum, zip(current, self.directions[direction])))
