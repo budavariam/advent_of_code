@@ -44,6 +44,7 @@ class Dance(object):
             if elem[0] == 'p':
                 match = re.match(self.rpartner, elem)
                 self.progs = self.partner(self.progs, match.group(1), match.group(2))
+        return ''.join(self.progs)
 
     @staticmethod
     def spin(data, count):
@@ -65,11 +66,18 @@ class Dance(object):
 def solution(data):
     """ Solution to the problem """
     dance = Dance(data, 'a', 'p')
+    states = set()
+    state_order = list()
+    moves_left = 0
     for index in range(1000000000):
-        if (index % 1000000) == 0:
-            print(index)
-            dance.process()
-    return ''.join(dance.progs)
+        state = dance.process()
+        state_order.append(state)
+        if state in states:
+            break
+        else:
+            states.add(state)
+    last_state = state_order[(1000000000 % index) - 1]
+    return ''.join(last_state)
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
