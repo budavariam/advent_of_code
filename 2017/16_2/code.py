@@ -46,6 +46,27 @@ class Dance(object):
                 self.progs = self.partner(self.progs, match.group(1), match.group(2))
         return ''.join(self.progs)
 
+    def process_more(self, count):
+        """ Process n whole sequences until it repeats, then count the remaining for the bound"""
+        states = set()
+        state_order = list()
+        index = 0
+        repeats = False
+        for index in range(count):
+            state = self.process()
+            if state in states:
+                repeats = True
+                break
+            else:
+                states.add(state)
+            state_order.append(state)
+        if repeats:
+            last_state = state_order[(count % index) - 1]
+        else:
+            last_state = state
+        #print(state_order)
+        return ''.join(last_state)
+
     @staticmethod
     def spin(data, count):
         """ Get the last n programs to the front """
@@ -66,18 +87,7 @@ class Dance(object):
 def solution(data):
     """ Solution to the problem """
     dance = Dance(data, 'a', 'p')
-    states = set()
-    state_order = list()
-    moves_left = 0
-    for index in range(1000000000):
-        state = dance.process()
-        state_order.append(state)
-        if state in states:
-            break
-        else:
-            states.add(state)
-    last_state = state_order[(1000000000 % index) - 1]
-    return ''.join(last_state)
+    return dance.process_more(1000000000)
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()

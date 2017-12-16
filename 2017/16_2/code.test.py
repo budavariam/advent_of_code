@@ -8,7 +8,7 @@ class MyTest(unittest.TestCase):
 
     def test_match(self):
         """ The basic test cases """
-        self.assertEqual(Dance("""s1,x3/4,pe/b""", 'a', 'e').process(), "baedc")
+        self.assertEqual(Dance("""s1,x3/4,pe/b""", 'a', 'e').process_more(1000000000), "abcde")
 
 if __name__ == '__main__':
     unittest.main()
