@@ -1,4 +1,4 @@
-""" Advent of code 2017	day 17/1 """
+""" Advent of code 2017	day 17/2 """
 
 import unittest
 from code import solution
@@ -8,7 +8,7 @@ class MyTest(unittest.TestCase):
 
     def test_match(self):
         """ The basic test cases """
-        self.assertEqual(solution(3), 638)
+        self.assertEqual(solution(3), 1222153)
 
 if __name__ == '__main__':
     unittest.main()
