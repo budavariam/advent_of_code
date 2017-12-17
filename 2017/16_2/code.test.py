@@ -1,7 +1,7 @@
 """ Advent of code 2017	day 16/1 """
 
 import unittest
-from code import solution, Dance
+from code import Dance
 
 class MyTest(unittest.TestCase):
     """Unit tests for actual day"""
@@ -12,5 +12,3 @@ class MyTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-

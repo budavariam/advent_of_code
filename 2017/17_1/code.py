@@ -51,13 +51,17 @@ class Linkedlist(object):
         if count + planned_move < self.length:
             move_count = count
             self.cur_pos += move_count
-            # print("Move less from {} to {}({})".format(self.cur_pos, self.cur_pos + move_count, planned_move))
+            # print("Move less from {} to {}({})".format(
+            #   self.cur_pos,
+            #   self.cur_pos + move_count,
+            #   planned_move
+            # ))
         else:
             self.cur_node = self.start_node
-            move_count = max(0,(planned_move % (self.length)))
+            move_count = max(0, (planned_move % (self.length)))
             # print("Move circ from {} to {}({})".format(self.cur_pos, move_count, planned_move))
             self.cur_pos = move_count
-        for i in range(move_count):
+        for _ in range(move_count):
             self.cur_node = self.cur_node.next
 
     def get_next(self):
@@ -73,7 +77,7 @@ class Spinlock(object):
 
     def __repr__(self):
         """Representation of the spinlock """
-        return "Spinlock moves: {}".format(self.stepforward)
+        return "Spinlock({})".format(self.stepforward)
 
     def process(self, count):
         """ Move n steps then insert a new value """

@@ -1,6 +1,5 @@
 """ Advent of code 2017 day 14/1 """
 from argparse import ArgumentParser
-from functools import reduce
 from knot import Knot
 
 def convert(line):
@@ -11,9 +10,9 @@ def count_used(matrix):
     """ Count the 1-s in the lines """
     return sum([line.count('1') for line in matrix])
 
-def solution(input_data):
+def solution(data):
     """ Solution to the problem """
-    matrix = [convert(Knot(256, '{}-{}'.format(input_data, index)).knot_hash()) for index in range(128)]
+    matrix = [convert(Knot(256, '{}-{}'.format(data, index)).knot_hash()) for index in range(128)]
     return count_used(matrix)
 
 if __name__ == "__main__":

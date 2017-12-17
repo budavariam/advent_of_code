@@ -39,6 +39,7 @@ class Firewall(object):
         """ Constructor of the node """
         self.ranges = self.parse_input(data)
         self.largest_depth = max(self.ranges)
+        self.caught = []
         self.reset()
 
     def __repr__(self):

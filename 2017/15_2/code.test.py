@@ -15,11 +15,11 @@ Generator B starts with 8921"""), 309)
         """ Test compare function """
         judge = Judge([0, 0], 0)
         self.assertEqual(judge.compare(1352636452, 1233683848), False)
-        self.assertEqual(judge.compare(1992081072,  862516352), False)
-        self.assertEqual(judge.compare( 530830436, 1159784568), False)
+        self.assertEqual(judge.compare(1992081072, 862516352), False)
+        self.assertEqual(judge.compare(530830436, 1159784568), False)
         self.assertEqual(judge.compare(1980017072, 1616057672), False)
-        self.assertEqual(judge.compare( 740335192, 412269392), False)
-        self.assertEqual(judge.compare( 1023762912, 896885216), True)
+        self.assertEqual(judge.compare(740335192, 412269392), False)
+        self.assertEqual(judge.compare(1023762912, 896885216), True)
 
 if __name__ == '__main__':
     unittest.main()
