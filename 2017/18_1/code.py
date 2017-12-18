@@ -223,7 +223,7 @@ OPERATION = {
 }
 
 class Parser(object):
-    """ Spinlock implementation """
+    """ Parser implementation """
     def __init__(self, data):
         """Constructor for the parser """
         self.instr = self.read_data(data.split('\n'))
