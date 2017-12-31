@@ -92,14 +92,14 @@ class Fractal(object):
         """ Update all the fragments with the matching rules """
         image = []
         newsize = (3 if break_count == 2 else 4)
-        print("update image of size:{} to newsize:{}".format(self.size, newsize))
+        #print("update image of size:{} to newsize:{}".format(self.size, newsize))
         for frag in fragments:
             flattened = self.flatten(frag)
-            print(" frag: {}".format(flattened))
+            #print(" frag: {}".format(flattened))
             if flattened not in self.patterns:
                 raise Exception('Pattern missing!')
             newpattern = self.patterns[flattened].result
-            print("  into: {}".format(newpattern))
+            #print("  into: {}".format(newpattern))
             array = numpy.reshape(self.deflatten(newpattern), (newsize, newsize))
             image.append(array.copy())
         separated_count = self.size // break_count
@@ -158,7 +158,7 @@ class Fractal(object):
         for _ in range(count):
             break_count = 2 if self.size%2 == 0 else 3
             self.image, self.size = self.update(break_count, self.break_image(break_count))
-            print(self.size)
+            #print(self.size)
             print(self.flatten(self.image))
 
 def solution(data, count):
