@@ -17,10 +17,12 @@ class Node(object):
         self.infected = True if char == '#' else False
         return self
 
-    def set_pos(self, pos_y, pos_x):
+    def set_pos(self, pos_y, pos_x, plot):
         """ Set the position for plotting """
         self.pos_y = pos_y
         self.pos_x = pos_x
+        if self.infected and plot:
+            self.plot()
         return self
 
     def plot(self):
@@ -68,9 +70,9 @@ ARROW = {
 
 class Grid(object):
     """ Fractal representation """
-    def __init__(self, data):
+    def __init__(self, data, plot):
         """Constructor"""
-        current_map = self.read_data(data)
+        current_map = self.read_data(data, plot)
         self.map = current_map
         self.carrier_pos = (0, 0)
         self.carrier_dir = 'n'
@@ -81,7 +83,7 @@ class Grid(object):
         return "Grid({})".format(self.carrier_pos)
 
     @classmethod
-    def read_data(cls, data):
+    def read_data(cls, data, plot):
         """ Read the data from the input """
         input_map = data.split('\n')
         width = len(input_map[0])
@@ -92,13 +94,14 @@ class Grid(object):
             p_y = start[1] - (i_y + 1)
             for i_x, char in enumerate(line):
                 p_x = (i_x - start[0]) + 1
-                current_map[(p_y, p_x)] = Node().infect(char).set_pos(p_y, p_x)
+                current_map[(p_y, p_x)] = Node().infect(char).set_pos(p_y, p_x, plot)
         return current_map
 
     @staticmethod
     def plot_infector(pos, direction):
         """ Plot an arrow facing the appropriate direction """
-        return plt.plot(pos[1], pos[0], linestyle='none', marker=ARROW[direction], markersize=6)
+        dire = ARROW[direction]
+        return plt.plot(pos[1], pos[0], c='k', linestyle='none', marker=dire, markersize=10)
 
     def simulate(self, burst_count, speed, plot):
         """ Simulate the bursts of activities
@@ -119,7 +122,6 @@ class Grid(object):
             plt.pause(pauseint)
         for index in range(burst_count):
             if plot:
-                current_plot[0].remove()
                 fig.canvas.set_window_title('Iteration {}'.format(index))
             node = self.map[self.carrier_pos]
             node.pos_y = self.carrier_pos[0]
@@ -130,6 +132,7 @@ class Grid(object):
                 self.burst_infected += 1
             self.carrier_pos = self.move_carrier(self.carrier_pos, DIRECTIONS[self.carrier_dir])
             if plot:
+                current_plot[0].remove()
                 current_plot = self.plot_infector(self.carrier_pos, self.carrier_dir)
                 plt.pause(pauseint)
 
@@ -156,20 +159,21 @@ class Grid(object):
 
 def solution(data, plot=False):
     """ Solution to the problem """
-    grid = Grid(data)
-    grid.simulate(10000, 10, plot)
+    grid = Grid(data, plot)
+    grid.simulate(10000, 1000, plot)
     return grid.burst_infected
 
 if __name__ == "__main__":
     PARSER = ArgumentParser()
     PARSER.add_argument("--input", dest='input', action='store_true')
+    PARSER.add_argument("--plot", dest='plot', action='store_true')
     PARSER.add_argument("--test")
     ARGS = PARSER.parse_args()
     if ARGS.input:
         with(open('input.txt', 'r')) as input_file:
-            print(solution(input_file.read(), True))
+            print(solution(input_file.read(), ARGS.plot))
     elif ARGS.test:
-        print(solution(str(ARGS.test), True))
+        print(solution(str(ARGS.test), ARGS.plot))
     else:
         DEBUG = """..#
 #..
