@@ -7,15 +7,14 @@ from collections import defaultdict
 def read_data(data):
     """ Read data blocks """
     pattern = re.compile(r'(\d+)/(\d+)')
-    edges = defaultdict(list)
+    edges = defaultdict(set)
     for line in data.split('\n'):
         matches = re.match(pattern, line)
         val_a = int(matches.group(1))
         val_b = int(matches.group(2))
         edge = Edge(line, sorted([val_a, val_b]), (val_a + val_b))
-        edges[val_a].append(edge)
-        if val_a != val_b:
-            edges[val_b].append(edge)
+        edges[val_a].add(edge)
+        edges[val_b].add(edge)
     return edges
 
 class Edge(object):
@@ -54,14 +53,13 @@ class Generator(object):
         if visited is None:
             visited = set()
         if current_edge is not None:
-            visited.add(current_edge.repr)
+            visited = visited | {current_edge}
             strength += current_edge.strength
             connect = current_edge.other(connect)
-        available = [edge for edge in self.edges[connect] if not edge.repr in visited]
+        available = [edge for edge in self.edges[connect] if not edge in visited]
         if not available:
-            #print(strength)
             return strength
-        return max(self.find(connect, edge, deepcopy(visited), strength) for edge in available)
+        return max(self.find(connect, edge, visited, strength) for edge in available)
 
 def solution(data):
     """ Solution to the problem """
