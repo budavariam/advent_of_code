@@ -1,4 +1,4 @@
-""" Advent of code 2017 day 23/1 """
+""" Advent of code 2017 day 24/1 """
 from argparse import ArgumentParser
 from copy import deepcopy
 import re
@@ -24,7 +24,6 @@ class Edge(object):
         """ Constructor """
         self.val_l = ends[0]
         self.val_g = ends[1]
-        self.ends = set(ends)
         self.strength = strength
         self.repr = line
 
@@ -34,7 +33,7 @@ class Edge(object):
 
     def other(self, connect):
         """ Return the other end of the edge """
-        return list(self.ends.difference([connect]))[0] if len(self.ends) == 2 else connect
+        return self.val_l if connect == self.val_g else self.val_g
 
 class Generator(object):
     """ Graph solver with generating all paths"""
@@ -58,11 +57,9 @@ class Generator(object):
             visited.add(current_edge.repr)
             strength += current_edge.strength
             connect = current_edge.other(connect)
-            #debug.append((strength, current_edge))
         available = [edge for edge in self.edges[connect] if not edge.repr in visited]
-        empty = len(available) == 0
-        if empty:
-            print(strength)
+        if not available:
+            #print(strength)
             return strength
         return max(self.find(connect, edge, deepcopy(visited), strength) for edge in available)
 
@@ -85,65 +82,7 @@ if __name__ == "__main__":
     elif ARGS.test:
         print(solution(str(ARGS.test)))
     else:
-        DEBUG = """25/13
-4/43
-42/42
-39/40
-17/18
-30/7
-12/12
-32/28
-9/28
-1/1
-16/7
-47/43
-34/16
-39/36
-6/4
-3/2
-10/49
-46/50
-18/25
-2/23
-3/21
-5/24
-46/26
-50/19
-26/41
-1/50
-47/41
-39/50
-12/14
-11/19
-28/2
-38/47
-5/5
-38/34
-39/39
-17/34
-42/16
-32/23
-13/21
-28/6
-6/20
-1/30
-44/21
-11/28
-14/17
-33/33
-17/43
-31/13
-11/21
-31/39
-0/9
-13/50
-10/14
-16/10
-3/24
-7/0
-50/50"""
-
-        ASD = """0/2
+        DEBUG = """0/2
 2/2
 2/3
 3/4
@@ -151,4 +90,4 @@ if __name__ == "__main__":
 0/1
 10/1
 9/10"""
-        print(solution(ASD))
+        print(solution(DEBUG))
