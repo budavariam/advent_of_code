@@ -1,6 +1,5 @@
 """ Advent of code 2017 day 24/1 """
 from argparse import ArgumentParser
-from copy import deepcopy
 import re
 from collections import defaultdict
 
