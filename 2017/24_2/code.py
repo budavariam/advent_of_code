@@ -40,7 +40,7 @@ class Generator(object):
         """ Constructor """
         self.edges = edges
 
-    def find(self, connect, current_edge=None, visited=None, strength=0, length=0):
+    def find(self, connect, current_edge=None, visited=None, strlen=(0, 0)):
         """ Recursively generate the paths from start until it can
             * run the pathfinding to these edges
               * mark the edge as visited
@@ -49,18 +49,16 @@ class Generator(object):
               * if there isn't any edges, return with the value
               * return the highest score
         """
-        if visited is None:
-            visited = set()
+        visited = visited or set()
         if current_edge is not None:
             visited = visited | {current_edge}
-            strength += current_edge.strength
             connect = current_edge.other(connect)
-            length += 1
+            strlen = (strlen[0] + current_edge.strength, strlen[1] + 1)
         available = [edge for edge in self.edges[connect] if not edge in visited]
         if not available:
-            return (strength, length)
+            return strlen
         return max(
-            (self.find(connect, edge, visited, strength, length) for edge in available),
+            (self.find(connect, edge, visited, strlen) for edge in available),
             key=lambda x: x[1]
             )
 
