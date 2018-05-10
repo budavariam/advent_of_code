@@ -47,8 +47,8 @@ class Position {
     private step: StepMap = {
         E: ["x",  1],
         N: ["y",  1],
-        S: ["x", -1],
-        W: ["y", -1],
+        S: ["y", -1],
+        W: ["x", -1],
     };
     constructor() {}
 
