@@ -1,0 +1,17 @@
+{
+  "name": "advent-of-code-2016",
+  "version": "0.0.1",
+  "description": "My solutions to advent-of-code-2016",
+  "main": "index.js",
+  "scripts": {
+    "test": "f(){ ts-node $1/test.ts; }; f",
+    "start": "ts-node"
+  },
+  "author": "Mátyás Budavári <budavariam@gmail.com> (https://budavariam.github.io)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.0.6",
+    "ts-node": "^6.0.3",
+    "typescript": "^2.8.3"
+  }
+}
