@@ -8,7 +8,8 @@
         "no-console": false,
         "ordered-imports": false,
         "no-empty": false,
-        "max-classes-per-file": 0
+        "max-classes-per-file": 0,
+        "object-literal-sort-keys": false
     },
     "rulesDirectory": []
 }
