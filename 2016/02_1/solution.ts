@@ -13,6 +13,12 @@ interface IKeyLookup {
     [key: string]: { [direction: string]: Key | null};
 }
 
+/*
+1 2 3
+4 5 6
+7 8 9
+*/
+
 const nextKey: IKeyLookup = {
     K1: {U: null, D: Key.K4, L: null, R: Key.K2},
     K2: {U: null, D: Key.K5, L: Key.K1, R: Key.K3},
