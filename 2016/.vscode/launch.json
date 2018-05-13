@@ -7,13 +7,25 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Run tests for current day",
             "runtimeArgs": [
                 "-r",
                 "ts-node/register"
             ],
             "args": [
-                "${workspaceFolder}/01_1/test.ts"
+                "${fileDirname}/test.ts"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug on input",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
+            ],
+            "args": [
+                "${fileDirname}/index.ts"
             ]
         }
     ]
