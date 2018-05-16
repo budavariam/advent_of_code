@@ -10,7 +10,9 @@
   "author": "Mátyás Budavári <budavariam@gmail.com> (https://budavariam.github.io)",
   "license": "MIT",
   "devDependencies": {
+    "@types/crypto-js": "^3.1.39",
     "@types/node": "^10.0.6",
+    "crypto-js": "^3.1.9-1",
     "ts-node": "^6.0.3",
     "typescript": "^2.8.3"
   }
