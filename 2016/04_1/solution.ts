@@ -5,7 +5,7 @@ export function solution(input: string[]) {
         .reduce((acc: number, curr: Room) => acc += curr.sectorID, 0);
 }
 
-const REGEXP = /((?:[a-z]+-)+)(\d+)\[(\w+)\]/;
+const REGEXP = /([a-z\-]+)-(\d+)(?:\[(\w+)\])?/;
 function parseInput(line: string): Room {
     const matches = line.match(REGEXP);
     if (matches) {
