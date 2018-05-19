@@ -27,6 +27,14 @@ For vscode debugging I've added launch configs. It gets the folder of the curren
 
 If you'd like to debug with custom data, feel free to add that data as the first test, into the appropriate file.
 
+### Debug on Windows
+
+You need to reset the debug session after the first run to stop on breakpoints with VSCode.
+
+> Don't forget to add a breakpoint in `test.ts`/`index.ts` to make sure it stops there.
+
+Solution: use `"protocol": "inspector"` on windows in launch config.
+
 ## Tips for incremental development
 
 * You can copy the folders.

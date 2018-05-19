@@ -14,7 +14,10 @@
             ],
             "args": [
                 "${fileDirname}/test.ts"
-            ]
+            ],
+            "windows": {
+                "protocol": "inspector"
+            }
         },
         {
             "type": "node",
