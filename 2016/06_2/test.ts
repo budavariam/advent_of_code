@@ -5,7 +5,7 @@ const data = [
     {input: [
         "abc",
         "abd",
-        "efd"
+        "efd",
     ],
     expected: "efc"},
 ];

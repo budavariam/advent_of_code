@@ -42,10 +42,10 @@ class Room {
     }
 
     private decipher(text: string, count: number) {
-        const lowerCaseShift = 'a'.charCodeAt(0); // 97     
+        const lowerCaseShift = "a".charCodeAt(0); // 97
         return String.fromCharCode(...text.split("").map((char) => {
             let shiftedChar = char.charCodeAt(0);
-            if (shiftedChar === 45){
+            if (shiftedChar === 45) {
                 shiftedChar = 32; // ' '.charCodeAt(0);
             } else {
                 shiftedChar -= lowerCaseShift;

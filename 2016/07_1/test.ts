@@ -6,7 +6,7 @@ const data = [
         "abba[mnop]qrst",
         "ioxxoj[asdfgh]zxcvbn",
         "abcd[bddb]xyyx",
-        "aaaa[qwer]tyui"
+        "aaaa[qwer]tyui",
     ], expected: "2"},
 ];
 

@@ -3,15 +3,15 @@ export function solution(input: string[]) {
     return message.getFilteredMessage();
 }
 
-type HistogramType = {[charCount: string]: number}[];
+type HistogramType = Array<{[charCount: string]: number}>;
 
 class Message {
     private histogram: HistogramType = [];
 
     constructor(private input: string[]) {
-        for (let line of input) {
+        for (const line of input) {
             line.split("").forEach((char, index) => {
-                if (!this.histogram[index]){
+                if (!this.histogram[index]) {
                     this.histogram[index] = {};
                 }
 
@@ -24,11 +24,11 @@ class Message {
         }
     }
 
-    public getFilteredMessage(){
+    public getFilteredMessage() {
         return this.histogram.map((posHistogram) => {
             let minIndex = Number.MAX_VALUE;
-            let minElem = '-';
-            for (let elem in posHistogram){
+            let minElem = "-";
+            for (const elem in posHistogram) {
                 if (posHistogram[elem] < minIndex) {
                     minElem = elem;
                     minIndex = posHistogram[elem];

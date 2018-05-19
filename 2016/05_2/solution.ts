@@ -12,19 +12,22 @@ class PassKey {
 
     constructor(private input: string) {}
 
-    public getSecondDoorPassword(){
+    public getSecondDoorPassword() {
         while (this.gotChar < 8) {
             let hash = "";
             do {
                 hash = MD5(this.input + this.counter++).toString();
-            } while (!hash.match(/^00000/))
+            } while (!hash.match(/^00000/));
             const position = parseInt(hash.charAt(6 - 1), 10);
-            //console.log(hash, this.counter, hash.charAt(5), hash.charAt(6), !isNaN(position), position <=7, !this.password[position]);
-            if ( !isNaN(position) && position <=7 && !this.password[position]){
+            /* console.log(
+                hash, this.counter, hash.charAt(5), hash.charAt(6),
+                !isNaN(position), position <=7, !this.password[position]);
+            */
+            if ( !isNaN(position) && position <= 7 && !this.password[position]) {
                 const charToPut =  hash.charAt(7 - 1);
                 this.password[position] = charToPut;
                 this.gotChar++;
-                //console.log(this.password);
+                // console.log(this.password);
             }
         }
         return this.password.join("");

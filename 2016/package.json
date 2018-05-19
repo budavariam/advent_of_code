@@ -4,6 +4,7 @@
   "description": "My solutions to advent-of-code-2016",
   "main": "index.js",
   "scripts": {
+    "lint": "tslint -p .",
     "test": "f(){ ts-node $1/test.ts; }; f",
     "start": "ts-node"
   },
@@ -14,6 +15,7 @@
     "@types/node": "^10.0.6",
     "crypto-js": "^3.1.9-1",
     "ts-node": "^6.0.3",
+    "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   }
 }
