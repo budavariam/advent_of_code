@@ -91,16 +91,12 @@ class Bot {
     public setConnections(low: Bot, high: Bot) {
         this.lowConnect = low;
         this.highConnect = high;
-        if (!this.sent && this.chips.length === 2) {
-            this.sendChips();
-        }
+        this.sendChips();
     }
 
     public setChip(value: number) {
         this.chips.push(value);
-        if (this.chips.length === 2) {
-            this.sendChips();
-        }
+        this.sendChips();
     }
 
     public getID(): number {
@@ -117,7 +113,7 @@ class Bot {
     }
 
     private sendChips() {
-        if (this.lowConnect && this.highConnect) {
+        if (!this.sent && this.lowConnect && this.highConnect && this.chips.length === 2) {
             const [lowChip, highChip] = this.chips.sort((a, b) => (a === b) ? 0 : (a > b ? 1 : -1));
             // console.log(this.name, "setChips", lowChip, highChip);
             this.lowConnect.setChip(lowChip);
