@@ -7,7 +7,8 @@
     "lint": "tslint -p .",
     "test": "f(){ ts-node $1/test.ts; }; f",
     "diff": "f(){ git diff HEAD:./${1}_1/ HEAD:./${1}_2/ }; f",
-    "start": "ts-node"
+    "start": "ts-node",
+    "precommit": "npm run lint --silent"
   },
   "author": "Mátyás Budavári <budavariam@gmail.com> (https://budavariam.github.io)",
   "license": "MIT",
@@ -15,6 +16,7 @@
     "@types/crypto-js": "^3.1.39",
     "@types/node": "^10.0.6",
     "crypto-js": "^3.1.9-1",
+    "husky": "^0.14.3",
     "ts-node": "^6.0.3",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
