@@ -114,7 +114,7 @@ class Bot {
 
     private sendChips() {
         if (!this.sent && this.lowConnect && this.highConnect && this.chips.length === 2) {
-            const [lowChip, highChip] = this.chips.sort((a, b) => (a === b) ? 0 : (a > b ? 1 : -1));
+            const [lowChip, highChip] = this.chips.sort((a, b) => a - b);
             // console.log(this.name, "setChips", lowChip, highChip);
             this.lowConnect.setChip(lowChip);
             this.highConnect.setChip(highChip);
