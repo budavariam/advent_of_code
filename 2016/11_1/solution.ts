@@ -78,14 +78,14 @@ class State {
 
     public print(maxFloor: number) {
         const matrix: string[][] = [];
-        for (let floor = maxFloor; floor >= 0; floor--) {
-            matrix[floor] = [this.elevator === floor ? "E " : ". "];
+        for (let floor = 0; floor <= maxFloor; floor++) {
+            matrix[floor] = [this.elevator === maxFloor - floor ? "E " : ". "];
         }
         for (const [elemName, elemFloor] of Array.from(this.generator)) {
-            for (let floor = maxFloor; floor >= 0 ; floor--) {
-                matrix[floor].push(elemFloor === floor ? elemName + "G" : ". ");
+            for (let floor = 0; floor <= maxFloor; floor++) {
+                matrix[floor].push(elemFloor === maxFloor - floor ? elemName + "G" : ". ");
                 const chipFloor = (this.microchip.get(elemName) || 0);
-                matrix[floor].push(chipFloor === floor ? elemName + "M" : ". ");
+                matrix[floor].push(chipFloor === maxFloor - floor ? elemName + "M" : ". ");
             }
         }
         matrix.forEach((line, index) => console.log(`F${maxFloor - index} ${line.join(" ")}`));

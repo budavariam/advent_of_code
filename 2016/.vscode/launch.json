@@ -29,7 +29,10 @@
             ],
             "args": [
                 "${fileDirname}/index.ts"
-            ]
+            ],
+            "windows": {
+                "protocol": "inspector"
+            }
         }
     ]
 }
