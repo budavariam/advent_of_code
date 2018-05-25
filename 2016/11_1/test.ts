@@ -7,7 +7,7 @@ const data = [
         "The second floor contains a hydrogen generator.",
         "The third floor contains a lithium generator.",
         "The fourth floor contains nothing relevant.",
-    ], expected: "9"},
+    ], expected: "11"},
 ];
 
 checkResult(solution, data);

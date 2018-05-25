@@ -34,6 +34,7 @@ class Optimizer {
             const state = this.queue.shift();
             if (state) {
                 // console.log(state.level); //state.hash());
+                // state.print(this.floorCount);
                 this.queue = this.queue.concat(state.getNextValidStates(this.floorCount, this.visited));
                 if (state.isFinished(this.floorCount)) {
                     return state.level;
@@ -66,41 +67,29 @@ class State {
     }
 
     public isSafe(): boolean {
-        // if a chip is at the same floor as an other chip and none of them has their own pair over there.
+        // if a chip is ever left in the same area as another RTG,
+        // and it's not connected to its own RTG, the chip will be fried
         const generators = Array.from(this.generator);
         const microchips = Array.from(this.microchip);
-        return !microchips.some(([chipName, chipFloor]) => {
-            // It's dangerous if there is at least one chip, that does not have its pair on its floor,
-            // AND it has another chip in this floor without its pair.
-            const pairFloor = (this.generator.get(chipName) || -1);
-            return ((chipFloor !== pairFloor) &&
-                microchips.some(([otherChipName, otherFloor]) =>
-                    chipName !== otherChipName &&
-                    chipFloor === otherFloor &&
-                    (this.generator.get(otherChipName) || -1) !== otherFloor));
-        });
+        return !microchips
+            .some(([chipName, chipFloor]) => chipFloor !== (this.generator.get(chipName) || -1) &&
+                generators.some(([genName, genFloor]) => genName !== chipName && chipFloor === genFloor));
     }
 
     public print(maxFloor: number) {
         const matrix: string[][] = [];
-        for (let floor = 0; floor < maxFloor; floor++) {
-            matrix[floor] = [];
+        for (let floor = maxFloor; floor >= 0; floor--) {
+            matrix[floor] = [this.elevator === floor ? "E " : ". "];
         }
-        for (const elem in this.generator) {
-            if (this.generator.hasOwnProperty(elem)) {
-                for (let floor = 0; floor < maxFloor; floor++) {
-                    matrix[floor].push(this.generator.get(elem) === floor ? elem + "G" : ". ");
-                }
+        for (const [elemName, elemFloor] of Array.from(this.generator)) {
+            for (let floor = maxFloor; floor >= 0 ; floor--) {
+                matrix[floor].push(elemFloor === floor ? elemName + "G" : ". ");
+                const chipFloor = (this.microchip.get(elemName) || 0);
+                matrix[floor].push(chipFloor === floor ? elemName + "M" : ". ");
             }
         }
-        for (const elem in this.microchip) {
-            if (this.microchip.hasOwnProperty(elem)) {
-                for (let floor = 0; floor < maxFloor; floor++) {
-                    matrix[floor].push(this.microchip.get(elem) === floor ? elem + "M" : ". ");
-                }
-            }
-        }
-        matrix.reverse().forEach((line, index) => console.log(`F${maxFloor - index} ${line.join(" ")}`));
+        matrix.forEach((line, index) => console.log(`F${maxFloor - index} ${line.join(" ")}`));
+        console.log();
     }
 
     public hash() {
