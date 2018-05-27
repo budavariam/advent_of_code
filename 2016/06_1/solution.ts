@@ -8,7 +8,7 @@ type HistogramType = Array<{[charCount: string]: number}>;
 class Message {
     private histogram: HistogramType = [];
 
-    constructor(private input: string[]) {
+    constructor(input: string[]) {
         for (const line of input) {
             line.split("").forEach((char, index) => {
                 if (!this.histogram[index]) {

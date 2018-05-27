@@ -1,5 +1,3 @@
-import { TLSSocket } from "tls";
-
 export function solution(input: string[]) {
     return "" + input
         .map((line) => new IPv7(line))
@@ -13,7 +11,7 @@ const isOdd =  (_: any, index: number) => index % 2 === 0;
 class IPv7 {
     public supportsTLS = false;
 
-    constructor(private line: string) {
+    constructor(line: string) {
         const parts = line.split(/\[|\]/); // odd index: bracketed; even: outside
 
         const inBrackets = parts

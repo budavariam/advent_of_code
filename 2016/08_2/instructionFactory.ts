@@ -1,6 +1,4 @@
 
-import { Screen } from "./solution";
-
 abstract class Instruction {
     public abstract operate(matrix: boolean[][]): void;
 }
@@ -12,7 +10,7 @@ class Rotate extends Instruction {
     private startFrom = 0;
     private rotateBy = 0;
 
-    constructor(private line: string, private screenWidth: number, private screenHeight: number) {
+    constructor(line: string, screenWidth: number, private screenHeight: number) {
         super();
         const match = line.match(this.regex);
         if (match) {
@@ -56,7 +54,7 @@ class Rect extends Instruction {
     private width = 0;
     private height = 0;
 
-    constructor(private line: string, private screenWidth: number, private screenHeight: number) {
+    constructor(line: string, screenWidth: number, screenHeight: number) {
         super();
         const match = line.match(this.regex);
         if (match) {

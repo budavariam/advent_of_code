@@ -1,4 +1,3 @@
-import { O_DIRECT } from "constants";
 
 export function solution(input: string[], options?: any) {
     const optimizer = new Optimizer(input);

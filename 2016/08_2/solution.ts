@@ -12,7 +12,7 @@ export class Screen {
     private debug = false;
 
     constructor(
-        private startState = false,
+        startState = false,
         private width: number = 50,
         private height = 6,
     ) {
