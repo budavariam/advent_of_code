@@ -1,0 +1,13 @@
+cpy 0 a // a => a + 2532 // == 633 * 4
+cpy a d
+cpy 4 c
+cpy 633 b
+inc d
+dec b
+jnz b -2
+dec c
+jnz c -5
+out a
+out b
+out c
+out d

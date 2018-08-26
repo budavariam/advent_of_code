@@ -1,0 +1,10 @@
+cpy 1 c //c == 1 && b == 1 || c == 2 && b = 0
+jnz 0 0
+cpy 2 b
+jnz c 2
+jnz 1 4
+dec b
+dec c
+jnz 1 -4
+jnz 0 0
+out b
