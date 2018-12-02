@@ -1,7 +1,7 @@
 package utils
 
-// Testcase describe a test case for the solution
-type Testcase struct {
+// TestcaseNum describe a test case for the solution with integer result
+type TestcaseNum struct {
 	Inp []string
 	Exp int
 }

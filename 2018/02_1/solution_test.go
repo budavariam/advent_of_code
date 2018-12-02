@@ -6,7 +6,7 @@ import (
 )
 
 func TestProvided(t *testing.T) {
-	data := []utils.Testcase{
+	data := []utils.TestcaseNum{
 		{Inp: []string{"abcdef"}, Exp: 0},
 		{Inp: []string{"bababc"}, Exp: 1},
 		{Inp: []string{"abcdef", "bababc", "abbcde", "abcccd", "aabcdd", "abcdee", "ababab"}, Exp: 12},

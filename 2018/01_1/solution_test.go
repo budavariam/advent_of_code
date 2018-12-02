@@ -6,7 +6,7 @@ import (
 )
 
 func TestSum(t *testing.T) {
-	data := []utils.Testcase{
+	data := []utils.TestcaseNum{
 		{Inp: []string{"1"}, Exp: 1},
 		{Inp: []string{"+1", "+1", "+1"}, Exp: 3},
 		{Inp: []string{"+1", "+1", "-2"}, Exp: 0},
