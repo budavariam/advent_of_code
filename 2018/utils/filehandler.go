@@ -4,18 +4,22 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"path"
 )
 
 func check(e error) {
 	if e != nil {
-		panic(e)
+		log.Fatal(e)
 	}
 }
 
 // LoadInput will the input file for the actual day
-func LoadInput(filename string) []string {
+func LoadInput(project string) []string {
 	var result = make([]string, 0)
-	file, err := os.Open(filename)
+	cwd, err := os.Getwd()
+	check(err)
+	fileToOpen := path.Join(cwd, project, "input.txt")
+	file, err := os.Open(fileToOpen)
 	check(err)
 	defer file.Close()
 	scanner := bufio.NewScanner(file)

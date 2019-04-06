@@ -1,12 +1,13 @@
 package main
 
 import (
-	"advent_of_code/2018/utils"
 	"fmt"
+
+	"github.com/budavariam/advent_of_code/2018/utils"
 )
 
 func main() {
-	data := utils.LoadInput("02_2/input.txt")
+	data := utils.LoadInput("02_2")
 	result := GetClosestBoxes(data)
 	fmt.Println(result)
 }

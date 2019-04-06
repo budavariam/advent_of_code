@@ -1,13 +1,14 @@
 package main
 
 import (
-	"advent_of_code/2018/utils"
 	"fmt"
 	"regexp"
+
+	"github.com/budavariam/advent_of_code/2018/utils"
 )
 
 func main() {
-	data := utils.LoadInput("12_2/input.txt")
+	data := utils.LoadInput("12_2")
 	result := CountPlantsAfterNGenerations(data, 50000000000)
 	fmt.Println(result)
 }

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"advent_of_code/2018/utils"
 	"testing"
+
+	"github.com/budavariam/advent_of_code/2018/utils"
 )
 
 func TestProvided(t *testing.T) {
