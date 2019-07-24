@@ -1,0 +1,37 @@
+0       addi            GOTO 17
+1       seti            dExitCond = 1
+2       seti            bIncrementer = 1
+3       mulr            c := dExitCond * bIncrementer
+4       eqrr            c = (c == fStartnumber) ? 1 : 0
+5       addr            GOTO 6 + c
+6       addi            GOTO 8
+7       addr            aResult := dExitCond + aResult
+8       addi            bIncrementer := bIncrementer + 1
+9       gtrr            c = (bIncrementer > fStartnumber) ? 1 : 0
+10      addr            GOTO 11 + c
+11      seti            GOTO 3
+12      addi            dExitCond := dExitCond + 1
+13      gtrr            c = (dExitCond > fStartnumber) ? 1 : 0
+14      addr            GOTO 15 + c
+15      seti            GOTO 2
+16      mulr            EXIT
+17      addi            fStartnumber := fStartnumber + 2
+18      mulr            fStartnumber := fStartnumber * fStartnumber
+19      mulr            fStartnumber := 19 * fStartnumber
+20      muli            fStartnumber := fStartnumber * 11
+21      addi            c := c + 5
+22      mulr            c := c * 22
+23      addi            c := c + 18
+24      addr            fStartnumber := fStartnumber + c
+25      addr            GOTO 26 + aResult
+26      seti            GOTO 1
+27      setr            c = 27
+28      mulr            c := c * 28
+29      addr            c := 29 + c
+30      mulr            c := 30 * c
+31      muli            c := c * 14
+32      mulr            c := c * 32
+33      addr            fStartnumber := fStartnumber + c
+34      seti            aResult = 0
+35      seti            GOTO 1
+1

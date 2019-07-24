@@ -1,0 +1,17 @@
+c = 128
+fStartnumber = 836 + c //964
+if aResult == 1 
+    c = 10550400
+    fStartnumber = fStartnumber + c //10551364
+    aResult = 0
+dExitCond = 1 
+while !(dExitCond > fStartnumber)
+    bIncrementer = 1
+    while !(bIncrementer > fStartnumber)
+        c = dExitCond*bIncrementer
+        if c == fStartnumber 
+            aResult += dExitCond
+        bIncrementer++
+    dExitCond++
+exit
+print aResult
