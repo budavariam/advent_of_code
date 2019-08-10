@@ -1,0 +1,27 @@
+0       seti            d = 123
+1       bani            d = d & 456
+2       eqri            d = (d == 72) ? 1 : 0                                   # 0. first time it will pass
+3       addr            GOTO 4 + d
+4       seti            GOTO 1
+5       seti            d = 0
+6       bori            c = d | 65536                                           # 6. if you reach this line, c will grow... (65537)
+7       seti            d = 14070682
+8       bani            b = c & 255                                             # 7. '1' at first.
+9       addr            d := (((d + b) & 16777215) * 65899) & 16777215          # 8. 14070417 at first
+13      gtir            b = (256 > c) ? 1 : 0                                   # 5. c should be less than 256
+14      addr            GOTO 15 + b                                             # 4. b should be 1 at this point
+15      addi            GOTO 17
+16      seti            GOTO 28                                                 # 3. should reach this
+17      seti            b = 0
+18      addi            e := (b + 1) * 256
+20      gtrr            e = (e > c) ? 1 : 0                                     # 8. false at first, should be true
+21      addr            GOTO 22 + e
+22      addi            GOTO 24
+23      seti            GOTO 26
+24      addi            b := b + 1
+25      seti            GOTO 18
+26      setr            c = b
+27      seti            GOTO 8
+28      eqrr            b = (d == a) ? 1 : 0                                    # 1. key point!!!!!!!!!
+29      addr            GOTO 30 + b                                             # 2. b=1 halts
+30      seti            GOTO 6

@@ -1,0 +1,12 @@
+start the parser at day 19_1 and stop the code at the 28th line.
+
+e.g with: 
+
+if device.ip == 28 {
+    fmt.Println(nextState.registers, device.ip)
+    os.Exit(0)
+}
+
+result: [0 0 1 6132825 1 28] 27 28
+
+solution is the register[3].
