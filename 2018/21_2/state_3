@@ -1,0 +1,30 @@
+5    ---  d = 0
+
+while b != 0:
+
+6    ---  c = d | 65536                                           # 6. if you reach this line, c will grow... (65537)
+7    ---  d = 14070682
+
+
+8    ---  b = c & 255                                             # 7. '1' at first.
+9    ---  d := (((d + b) & 16777215) * 65899) & 16777215          # 8. 14070417 at first
+
+
+13   ---  b = (256 > c) ? 1 : 0                                   # 5. c should be less than 256
+
+if b == 1:
+    GOTO: 28
+
+17   ---  b = 0
+18   ---  e := (b + 1) * 256
+20   ---  e = (e > c) ? 1 : 0                                     # 8. false at first, should be true
+
+if e == 0:
+    b++
+    GOTO 18
+
+26   ---  c = b
+27   ---  GOTO 8
+28   ---  b = (d == a) ? 1 : 0                                    # 1. key point!!!!!!!!!
+EXIT
+

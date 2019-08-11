@@ -1,0 +1,31 @@
+0       seti            d = 123
+1       bani            d = d & 456
+2       eqri            d = (d == 72) ? 1 : 0
+3       addr            GOTO 4 + d
+4       seti            GOTO 1
+5       seti            d = 0
+6       bori            c = d | 65536
+7       seti            d = 14070682
+8       bani            b = c & 255
+9       addr            d := d + b
+10      bani            d = d & 16777215
+11      muli            d := d * 65899
+12      bani            d = d & 16777215
+13      gtir            b = (256 > c) ? 1 : 0
+14      addr            GOTO 15 + b
+15      addi            GOTO 17
+16      seti            GOTO 28
+17      seti            b = 0
+18      addi            e := b + 1
+19      muli            e := e * 256
+20      gtrr            e = (e > c) ? 1 : 0
+21      addr            GOTO 22 + e
+22      addi            GOTO 24
+23      seti            GOTO 26
+24      addi            b := b + 1
+25      seti            GOTO 18
+26      setr            c = b
+27      seti            GOTO 8
+28      eqrr            b = (d == a) ? 1 : 0
+29      addr            GOTO 30 + b
+30      seti            GOTO 6
