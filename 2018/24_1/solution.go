@@ -148,7 +148,7 @@ func (u *unit) selectEnemy(enemies unitContainer, alreadySelected unitSet) *unit
 			currentMaxDmg = dmg
 		}
 	}
-	if selectedEnemy.id == 0 {
+	if selectedEnemy.id == 0 || currentMaxDmg == 0 {
 		return nil
 	}
 	return selectedEnemy
