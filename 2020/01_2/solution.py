@@ -1,8 +1,8 @@
 """ Advent of code 2020 day 1/2 """
 
-from argparse import ArgumentParser
 import math
 from os import path
+
 
 def solution(data):
     """ Solution to the problem """
@@ -19,6 +19,7 @@ def solution(data):
         if inverseMultiplied is not None:
             return value * inverseMultiplied
     return None
+
 
 if __name__ == "__main__":
     with(open(path.join(path.dirname(__file__), 'input.txt'), 'r')) as input_file:

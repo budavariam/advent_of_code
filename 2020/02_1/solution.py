@@ -1,6 +1,5 @@
-""" Advent of code 2020 day 2/2 """
+""" Advent of code 2020 day 2/1 """
 
-from argparse import ArgumentParser
 import math
 from os import path
 import re

@@ -2,16 +2,15 @@
 
 I use python 3.8 on mac.
 
-```batch
+```bash
 python3 -m venv .ve
 . ./.ve/bin/activate
+pip install -r requirements.txt
 
 deactivate
 ```
 
-| Type         | Code                               | Description                                                   |
-| ------------ | ---------------------------------- | ------------------------------------------------------------- |
-| Inputfile    | `python3 solution.py --input`      | reads input.txt file from the current folder.                 |
-| Testargument | `python3 solution.py --test value` | reads the value into the solution function                    |
-| Unittest     | `python3 solution_test.py`         | runs the unit tests for the code                              |
-| Debug        | `python3 solution.py`              | runs the program with a MAGIC debug data for quick debugging. |
+| Type      | Code                       | Description                                   |
+| --------- | -------------------------- | --------------------------------------------- |
+| Inputfile | `python3 solution.py`      | reads input.txt file from the current folder. |
+| Unittest  | `python3 solution_test.py` | runs the unit tests for the code              |
