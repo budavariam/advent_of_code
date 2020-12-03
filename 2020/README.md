@@ -10,8 +10,8 @@ pip install -r requirements.txt
 deactivate
 ```
 
-| Type      | Code                        | Description                                                 |
-| --------- | --------------------------- | ----------------------------------------------------------- |
-| Inputfile | `python3 solution.py`       | reads input.txt file from the current folder.               |
-| Unittest  | `python3 solution_test.py`  | runs the unit tests for the code                            |
-| Template  | `./start.py ${DAY} ${PART}` | Create a wireframe for the solution and opens the new files |
+| Type      | Code                       | Description                                                 |
+| --------- | -------------------------- | ----------------------------------------------------------- |
+| Inputfile | `python3 solution.py`      | reads input.txt file from the current folder.               |
+| Unittest  | `python3 solution_test.py` | runs the unit tests for the code                            |
+| Template  | `./init.py ${DAY} ${PART}` | create a wireframe for the solution, and open the new files |
