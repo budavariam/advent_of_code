@@ -3,6 +3,7 @@
 import math
 from os import path
 
+
 class Code(object):
     def __init__(self, lines):
         self.lines = lines

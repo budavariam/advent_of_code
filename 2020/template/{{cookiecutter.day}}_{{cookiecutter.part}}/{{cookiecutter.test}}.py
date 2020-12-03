@@ -1,7 +1,7 @@
 """ Advent of code 2020 day {{cookiecutter.day}}/{{cookiecutter.part}} """
 
 import unittest
-from solution import solution
+from {{cookiecutter.main}} import solution
 
 
 class MyTest(unittest.TestCase):
