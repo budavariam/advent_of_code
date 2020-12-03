@@ -4,8 +4,8 @@ import math
 from os import path
 
 class Code(object):
-    def __init__(self, line):
-        self.line = line
+    def __init__(self, lines):
+        self.lines = lines
 
     def solve(self):
         pass
