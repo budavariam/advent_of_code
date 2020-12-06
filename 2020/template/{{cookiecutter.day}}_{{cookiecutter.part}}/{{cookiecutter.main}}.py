@@ -12,9 +12,14 @@ class Code(object):
         pass
 
 
+def preprocess(raw_data):
+    processed_data = raw_data.split("\n")
+    return processed_data
+
+
 def solution(data):
     """ Solution to the problem """
-    lines = data.split("\n")
+    lines = preprocess(data)
     solver = Code(lines)
     return solver.solve()
 
