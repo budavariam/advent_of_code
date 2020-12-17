@@ -8,7 +8,7 @@ class Code(object):
     def __init__(self, starting_numbers, stop):
         self.starting_numbers = starting_numbers
         self.memory = {}
-        self.stop = 2020
+        self.stop = stop
 
     def solve(self):
         self.memory[self.starting_numbers[0]] = 1
