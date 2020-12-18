@@ -12,12 +12,32 @@ class Code(object):
     def __init__(self, lines):
         self.lines = lines
 
+    def step_level_forward(self, level, results, operations):
+        """ Beware! It mutates the given array parameters, returned them to make it clear """
+        level += 1
+        results.append(0)
+        operations.append(add)
+        return level, results, operations
+
+    def step_level_backward(self, target_level, level, results, operations):
+        """ Beware! It mutates the given array parameters, returned them to make it clear """
+        while level != target_level:
+            level -= 1
+            parentheses_inner_results = results.pop()
+            operation = operations.pop()
+            results[level] = operation(
+                results[level],
+                parentheses_inner_results
+            )
+        return level, results, operations
+
     def calc_expression(self, expression):
         readline = StringIO(expression).readline
         paren_level = []
-        level = 0
-        results = [0]
-        operations = [add]
+        level = -1
+        results = []
+        operations = []
+        level, results, operations = self.step_level_forward(level, results, operations)
         for tok in generate_tokens(readline):
             # print(f"{tok_name[tok.exact_type]} - {repr(tok.string)}")
             if tok.exact_type == NUMBER:
@@ -30,43 +50,25 @@ class Code(object):
                 )
             elif tok.exact_type == PLUS:
                 operations.append(add)
-                # to have proper precedence, start a new sublevel for each operation
             elif tok.exact_type == STAR:
-                level += 1
                 operations.append(mul)
-                results.append(0)
-                operations.append(add)
+                # to have proper precedence, start a new sublevel for each of this operation
+                level, results, operations = self.step_level_forward(level, results, operations)
             elif tok.exact_type == LPAR:
                 # for new parentheses, add the first number to 0
                 paren_level.append(level)
-                level += 1
-                results.append(0)
-                operations.append(add)
+                level, results, operations = self.step_level_forward(level, results, operations)
             elif tok.exact_type == RPAR:
                 plevel = paren_level.pop()
                 # for ending parentheses step as many levels back as the starting parenttheses and calculate the operation result
-                while level != plevel:
-                    level -= 1
-                    parentheses_inner_results = results.pop()
-                    operation = operations.pop()
-                    results[level] = operation(
-                        results[level],
-                        parentheses_inner_results
-                    )
+                level, results, operations = self.step_level_backward(plevel, level, results, operations)
             elif tok.exact_type in [ENDMARKER, NEWLINE]:
-                while level != 0:
-                    level -= 1
-                    parentheses_inner_results = results.pop()
-                    operation = operations.pop()
-                    results[level] = operation(
-                        results[level],
-                        parentheses_inner_results
-                    )
+                level, results, operations = self.step_level_backward(0, level, results, operations)
                 break
             else:
                 print("UNHANDLED token", tok)
                 sys.exit(1)
-            #print(f"--- level: {level} result_stack: {results} op_stack: {operations}")
+            # print(f"--- level: {level} result_stack: {results} op_stack: {operations}")
         return results[level]
 
     def solve(self):
