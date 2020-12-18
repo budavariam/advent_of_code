@@ -10,6 +10,8 @@ class MyTest(unittest.TestCase):
     def test_basic(self):
         """ Test from the task """
         self.assertEqual(
+            solution("""1 + (2 * 3) + (4 * (5 + 6))"""), 51)
+        self.assertEqual(
             solution("""2 * 3 + (4 * 5)"""), 26)
         self.assertEqual(
             solution("""5 + (8 * 3 + 9 + 3 * 4 * 3)"""), 437)
