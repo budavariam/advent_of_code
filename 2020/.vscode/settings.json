@@ -1,0 +1,13 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#7d03c3",
+        "activityBar.activeBorder": "#bc7903",
+        "activityBar.background": "#7d03c3",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#bc7903",
+        "activityBarBadge.foreground": "#e7e7e7"
+    },
+    "peacock.color": "#5d0291",
+    "python.pythonPath": ".ve/bin/python"
+}
