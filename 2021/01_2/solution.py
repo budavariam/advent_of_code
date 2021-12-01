@@ -9,7 +9,11 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        pass
+        sliding = list(zip(self.lines, self.lines[1:], self.lines[2:]))
+        # print(sliding)
+        newlist = [int(c) + int(b) + int(a) for [a,b,c] in sliding]
+        res = list(zip(newlist, newlist[1:]))
+        return [int(b) > int(a) for [a,b] in res].count(True)
 
 
 def preprocess(raw_data):
