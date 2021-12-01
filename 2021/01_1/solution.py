@@ -9,7 +9,8 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        pass
+        res = list(zip(self.lines, self.lines[1:]))
+        return [int(b) > int(a) for [a,b] in res].count(True)
 
 
 def preprocess(raw_data):
