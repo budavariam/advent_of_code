@@ -10,10 +10,10 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        print(self.lines)
+        # print(self.lines)
         gamma = ""  # most common
         epsilon = ""  # least common
-        bits = [[0, 0] for x in range(12)]
+        bits = [[0, 0] for x in range(len(self.lines[0]))]
         for line in self.lines:
             for num, bit in enumerate(line):
                 bits[num][int(bit)] += 1 
@@ -26,6 +26,7 @@ class Code(object):
                 epsilon += '0'
         g = int(gamma, base=2)
         e = int(epsilon, base=2)
+        # print(bits, gamma, epsilon, g, e)
         pow = g * e
         return pow
 
