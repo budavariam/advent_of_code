@@ -10,7 +10,7 @@ class Code(object):
         self.lines = lines
 
     def bit_hist(self, lns):
-        bits = [[0, 0] for x in range(12)]
+        bits = [[0, 0] for x in range(len(self.lines[0]))]
         gamma = ""  # most common
         epsilon = ""  # least common
         for line in lns:
