@@ -1,4 +1,4 @@
-""" Advent of code 2021 day {{cookiecutter.day}}/{{cookiecutter.part}} """
+""" Advent of code 2021 day {{cookiecutter.day}} / {{cookiecutter.part}} """
 
 import unittest
 from {{cookiecutter.main}} import solution
