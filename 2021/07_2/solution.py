@@ -1,43 +1,35 @@
 """ Advent of code 2021 day 07 / 2 """
 
-import math
 from os import path
-import re
-cache = {}
-
-def cch(lim):
-    if lim in cache:
-        return cache[lim]
-    else:
-        cache[lim] = sum([x+1 for x in range(lim)])
-    # print(cache)
-    return cache[lim]
 
 class Code(object):
     def __init__(self, lines):
         self.lines = lines
+        self.cache = {}
+
+    def cch(self, lim):
+        if not lim in self.cache:
+            self.cache[lim] = sum([x+1 for x in range(lim)])
+        # print(self.cache)
+        return self.cache[lim]
 
     def solve(self):
-        # print(self.lines)
-        minv, maxv = 99999999999, 0
-        for val in self.lines:
-            minv = min(val, minv)
-            maxv = max(val, maxv)
-        print(minv, maxv)
         fuels = []
-        for i in range(minv, maxv+1):
+        for i, val in enumerate(self.lines):
             fuel = 0
             for val in self.lines:
-                fuel += abs(cch(abs(i-val)))
+                fuel += self.cch(abs(i-val))
             fuels.append(fuel)
         return min(fuels)
+
+
 def preprocess(raw_data):
     # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = []
     for line in raw_data.split("\n"):
         # match = re.match(pattern, line)
         # data = [match.group(1), match.group(2)]
-        processed_data = list(map(int,line.split(",")))
+        processed_data = list(map(int, line.split(",")))
         # processed_data.append(data)
     return processed_data
 
