@@ -9,7 +9,7 @@ class Code(object):
 
     def cch(self, lim):
         if not lim in self.cache:
-            self.cache[lim] = sum([x+1 for x in range(lim)])
+            self.cache[lim] = int((lim*(lim+1))/2)
         # print(self.cache)
         return self.cache[lim]
 
