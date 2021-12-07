@@ -43,7 +43,10 @@ else:
         skip_if_file_exists=True,
     )
 
+loc_test = f"./{foldername}/{test}.py"
+loc_soln = f"./{foldername}/{main}.py"
+loc_inpt = f"./{foldername}/{inputfilename}.txt"
 
 # Open editor to begin
 os.system(
-    f"{editor} ./{foldername}/{inputfilename}.txt ./{foldername}/{test}.py ./{foldername}/{main}.py")
+    f"{editor} {loc_inpt} {loc_test} {loc_soln}")
