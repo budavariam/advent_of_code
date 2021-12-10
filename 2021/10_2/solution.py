@@ -1,9 +1,8 @@
 """ Advent of code 2021 day 10 / 2 """
 
-import math
 from os import path
-from collections import defaultdict, deque
-import re
+from collections import deque
+
 p = {
     "()": 1,
     "[]": 2,
@@ -21,56 +20,36 @@ m = {
     ">": "<>",
 }
 
+opening = set(["(", "[", "{", "<"])
+closing = set([")", "]", "}", ">"])
+
 class Code(object):
     def __init__(self, lines):
         self.lines = lines
 
     def solve(self):
         # print(self.lines)
-        scrs = []
+        scores = deque()
         for line in self.lines:
-            score = 0
-            chk = deque([])
-            opening = {
-                "(": 0,
-                "[": 0,
-                "{": 0,
-                "<": 0,
-            } 
-            closed = {
-                ")": 0,
-                "]": 0,
-                "}": 0,
-                ">": 0,
-            }
-            r = defaultdict(int)
+            s = 0
+            check_stack = deque()
             for c in line:
-                # corrupted = False
-                if c in opening.keys():
-                    opening[c] += 1
-                    r[m[c]] += 1
-                    chk.append(c)
-                elif c in closed.keys():
-                    closed[c] += 1
-                    r[m[c]] -= 1
-                    shouldclose = chk.pop()
+                if c in opening:
+                    check_stack.append(c)
+                elif c in closing:
+                    shouldclose = check_stack.pop()
                     if m[shouldclose] != m[c]:
-                        # illcars.append(c)
-                        # corrupted = True
+                        # ignore corrupted line
                         break
             else:
-                while len(chk) > 0:
-                    nex = chk.pop()
-                    score *= 5
-                    score += p[m[nex]]
-                scrs.append(score)
+                # calc incomplete line
+                while len(check_stack) > 0:
+                    next_char = check_stack.pop()
+                    s *= 5
+                    s += p[m[next_char]]
+                scores.append(s)
+        return sorted(scores)[len(scores)//2]
 
-
-            # print(line, r, corrupted)
-            # print("point",illcars)
-            # mid = list(sorted(scrs))[math.ceil(len(scrs)/2) -1]
-        return sorted(scrs)[len(scrs)//2] # sum([p[ca] for ca in illcars])
-            
 
 def preprocess(raw_data):
     # pattern = re.compile(r'(\w+) (\d+)')
