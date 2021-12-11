@@ -72,7 +72,7 @@ class Code(object):
                 self.lines[y][x] = 0
             self.printlines(f"After reset: {i}")
             flashes += currflash
-            print(f"iteration {i}", currflash, allCnt, flashes)
+            # print(f"iteration {i}", currflash, allCnt, flashes)
             if currflash == allCnt:
                 break
             i += 1
