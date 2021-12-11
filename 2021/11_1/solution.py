@@ -57,7 +57,7 @@ class Code(object):
         steps = 100
         # self.printlines("Before any steps:")
         for i in range(1, steps + 1):
-            print(f"iteration {i}", flashes)
+            # print(f"iteration {i}", flashes)
             flashing = set()
             for y, line in enumerate(self.lines):
                 for x, energy in enumerate(line):

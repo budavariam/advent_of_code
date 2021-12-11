@@ -9,11 +9,11 @@ class MyTest(unittest.TestCase):
 
     def test_basic(self):
         """ Test from the task """
-#         self.assertEqual(solution("""11111
-# 19991
-# 19191
-# 19991
-# 11111"""), 9)
+        self.assertEqual(solution("""11111
+19991
+19191
+19991
+11111"""), 259)
         self.assertEqual(solution("""5483143223
 2745854711
 5264556173
