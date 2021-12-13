@@ -4,7 +4,6 @@ from os import path
 import re
 
 
-
 class Code(object):
     def __init__(self, lines):
         self.opoints = lines[0]
@@ -12,50 +11,35 @@ class Code(object):
         self.instr = lines[1]
 
     def printmap(self):
-        ly, lx = [], []
-        for [x,y] in self.points:
-            ly.append(y)
-            lx.append(x)
+        ly, lx = set(), set()
+        for [x, y] in self.points:
+            ly.add(y)
+            lx.add(x)
         for y in range(min(ly), max(ly)+1):
             line = ""
             for x in range(min(lx), max(lx)+1):
-                line += "#" if (x,y) in self.points else "."
+                line += "#" if (x, y) in self.points else " "
             print(line)
 
-
-    def fold(self, foldcnt):
-        [dire, fpos] = self.instr[foldcnt]
-        useX = False
-        if dire == 'x':
-            useX = True
-            # fold left x
-            pass
-        elif dire == 'y':
-            useX = False
-            # fold up y
-            pass
+    def fold(self, ins):
+        [dire, fpos] = ins
         newp = set()
-        for [x,y] in self.points:
-            if useX:
-                if x < fpos:
-                    newp.add((x,y))
-                else:
-                    newp.add((fpos - abs(fpos - x), y))
-            else:
-                if y < fpos:
-                    newp.add((x,y))
-                else:
-                    newp.add((x, fpos - abs(fpos - y)))
+        for [x, y] in self.points:
+            n_x, n_y = x, y
+            if dire == 'x' and x > fpos:
+                # fold left x
+                n_x = fpos - abs(fpos - x)
+            elif dire == 'y' and y > fpos:
+                # fold up y
+                n_y = fpos - abs(fpos - y)
+            newp.add((n_x, n_y))
         self.points = newp
         return len(self.points)
 
     def solve(self):
-        print(self.points)
-        print(self.instr)
         res = 0
-        for i in range(0, len(self.instr)):
-            print("visiting", i)
-            res += self.fold(i)
+        for ins in self.instr:
+            res += self.fold(ins)
         self.printmap()
         return res
 
@@ -63,17 +47,19 @@ class Code(object):
 def preprocess(raw_data):
     pattern = re.compile(r'fold along ([xy])=(\d+)')
     processed_data = [[], []]
-    isPoints = True
+    resIndex = 0
     for line in raw_data.split("\n"):
         if line == "":
-            isPoints = False
+            resIndex = 1
             continue
-        if isPoints:
+        if resIndex == 0:
+            # points
             data = list(map(int, line.split(",")))
         else:
+            # instructions
             match = re.match(pattern, line)
             data = [match.group(1), int(match.group(2))]
-        processed_data[0 if isPoints else 1].append(data)
+        processed_data[resIndex].append(data)
     return processed_data
 
 
