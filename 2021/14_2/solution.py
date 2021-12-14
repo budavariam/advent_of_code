@@ -1,23 +1,27 @@
 """ Advent of code 2021 day 14 / 2 """
 
-import math
 from os import path
 import re
-from collections import Counter, defaultdict
+from collections import defaultdict
 
 
 class Code(object):
     def __init__(self, lines):
         self.str = lines[0]
-        self.curr = [a+b for [a, b] in zip(lines[0], lines[0][1:])]
-        self.d = lines[1]
+        self._curr = [a+b for [a, b] in zip(lines[0], lines[0][1:])]
         self.rules = {k: v for [k, v] in lines[1]}
-        self.c = {k: self.curr.count(k) for k in self.rules.keys()}
-        pass
+        self.current = {k: self._curr.count(k) for k in self.rules.keys()}
 
-    def calcres(self):
+    def step(self, c):
+        newf = defaultdict(int)
+        for [combo, occurrancenum] in c.items():
+            newf[self.rules[combo][0]] += occurrancenum
+            newf[self.rules[combo][1]] += occurrancenum
+        return newf
+
+    def result(self):
         pfreq = defaultdict(int)
-        for [k, v] in self.c.items():
+        for [k, v] in self.current.items():
             pfreq[k[0]] += v
         pfreq[self.str[-1]] += 1  # last stays the same
 
@@ -28,13 +32,9 @@ class Code(object):
 
     def solve(self):
         print(self.str)
-        for i in range(40):
-            newf = defaultdict(int)
-            for [k, res] in self.c.items():
-                newf[self.rules[k][0]] += res
-                newf[self.rules[k][1]] += res
-            self.c = newf
-        return self.calcres()
+        for _ in range(40):
+            self.current = self.step(self.current)
+        return self.result()
 
 
 def preprocess(raw_data):
@@ -54,9 +54,6 @@ def preprocess(raw_data):
         data = [
             a+b,
             [a+c, c+b]
-            # a,
-            # b,
-            # c
         ]
         processed_data[1].append(data)
     return processed_data
