@@ -43,10 +43,11 @@ class Code(object):
         self.lines = lines
         self.bin = "".join([m[x] for x in lines[0]])
 
-    def prnt(self, level, *args):
-        print(" "*level, " ".join([str(x) for x in args]))
+    def prnt(self, i, level, *args):
+        pass
+        # print(" "*level, f"{i}:", " ".join([str(x) for x in args]))
 
-    def parse_packets(self, txt, level, stopCnt=0):
+    def parse_packets(self, txt, level, p_i, stopCnt=0):
         try:
             i = 0
             res_v = 0
@@ -56,90 +57,99 @@ class Code(object):
                 """header"""
                 pv_raw = txt[i:i+3]
                 if pv_raw == '':
-                    self.prnt(level, "pv_raw empty", pv_raw)
+                    self.prnt(p_i+i, level, "pv_raw empty", pv_raw)
                     return (res_v, i)
                 packet_version = int(pv_raw, base=2)
                 res_v += packet_version
-                self.prnt(level, "packet_version", packet_version)
+                self.prnt(p_i+i, level, "packet_version", packet_version)
                 pt_raw = txt[i+3:i+6]
                 if pt_raw == '':
-                    self.prnt(level, "pt_raw empty", pt_raw)
+                    self.prnt(p_i+i, level, "pt_raw empty", pt_raw)
                     return (res_v, i)
                 packet_type_id = int(pt_raw, base=2)
-                self.prnt(level, "packet_type_id", packet_type_id)
-                j = i+6
+                self.prnt(p_i+i, level, "packet_type_id", packet_type_id)
+                i += 6
+                if i == len(txt):
+                    return (res_v, i)
                 if packet_type_id == 4:
-                    self.prnt(level, "TYPE: literal value: number")
+                    self.prnt(p_i+i, level, "TYPE: literal value: number")
                     should_read_packet = True
                     num = ""
                     while should_read_packet:
                         # each is prefixed with a one except the last
-                        should_read_packet = True if txt[j] == '1' else False
-                        n = txt[j+1:j+5]  # 4 bits of number
+                        should_read_packet = True if txt[i] == '1' else False
+                        n = txt[i+1:i+5]  # 4 bits of number
                         if len(n) != 4:
                             raise(Exception("offbyone0"))
                         num += n
-                        j += 5
+                        i += 5
                     num = int(num, base=2)
-                    self.prnt(level, "Read number", num)
+                    self.prnt(p_i+i, level, "Read number", num)
                     # move pointer
-                    i += j
                 else:
-                    self.prnt(level, """TYPE: operator""")
-                    length_type_id = txt[j]
-                    self.prnt(level, "length_type_id", length_type_id)
+                    self.prnt(p_i+i, level, """TYPE: operator""")
+                    length_type_id = txt[i]
+                    self.prnt(p_i+i, level, "length_type_id", length_type_id)
                     if length_type_id == '0':
                         """
                         then the next 15 bits are a number that represents 
                         the total length in bits of the sub-packets contained by this packet.
                         """
-                        subpacket_raw = txt[j+1:j+16]
+                        subpacket_raw = txt[i+1:i+16]
+                        if subpacket_raw == '':
+                            self.prnt(p_i+i, level, "subpacket_raw empty", subpacket_raw)
+                            return (res_v, i)
                         if len(subpacket_raw) != 15:
                             raise(Exception("offbyone0"))
                         subpacket_len = int(subpacket_raw, base=2)
-                        self.prnt(level, "subpacket_len", subpacket_len)
-                        subp = txt[j+16:j+16+subpacket_len]
+                        self.prnt(p_i+i, level, "subpacket_len", subpacket_len)
+                        subp = txt[i+16:i+16+subpacket_len]
                         if len(subp) != subpacket_len:
-                            raise(Exception("offbyone02"))
+                            raise(Exception(f"offbyone02 {len(subp)} != {subpacket_len}"))
                         subpackets, nexti = self.parse_packets(
-                            subp, level + 1
+                            subp, level + 1, i+p_i
                         )
                         res_v += subpackets
-                        self.prnt(level, "found subpackets: ", subpackets, "res_v", res_v)
+                        self.prnt(p_i+i, level, "found subpackets: ", subpackets, "res_v", res_v)
                         # move pointer
-                        i += 16+subpacket_len+1
+                        i += 16+subpacket_len
                         # ????
                         if subpacket_len != nexti:
-                            raise(Exception("offbyone01"))
+                            raise(Exception(f"offbyone01 {subpacket_len} != {nexti} {p_i} len{len(txt)}"))
                     elif length_type_id == '1':
                         """
                         If the length type ID is 1, then the next 11 bits are a number that represents 
                         the number of sub-packets immediately contained by this packet.
                         """
-                        subpacket_raw = txt[j+1:j+12]
+                        subpacket_raw = txt[i+1:i+12]
+                        if subpacket_raw == '':
+                            self.prnt(p_i+i, level, "subpacket_raw2 empty", subpacket_raw)
+                            return (res_v, i)
                         if len(subpacket_raw) != 11:
                             raise(Exception("offbyone1"))
                         subpacket_num = int(subpacket_raw, base=2)
-                        self.prnt(level, "found subpackets2", subpacket_num, "res_v", res_v)
+                        self.prnt(p_i+i, level, "found subpackets2", subpacket_num, "res_v", res_v)
                         subpackets, nexti = self.parse_packets(
-                            txt[j+12:], level+1, subpacket_num)
+                            txt[i+12:], level+1, i+p_i, subpacket_num
+                        )
                         res_v += subpackets
                         # move pointer
-                        i += j+12+nexti+1
+                        i += 12+nexti #+1
                     read_packet += 1
                     if read_packet == stopCnt:
-                        self.prnt(level, "read enough packets",
+                        self.prnt(p_i+i, level, "read enough packets",
                                   read_packet, stopCnt)
                         return (res_v, i)
-            self.prnt(level, "finished", read_packet - 1, res_v, i)
+            self.prnt(p_i+i, level, "finished", read_packet - 1, res_v, i)
             return (res_v, i)
         except Exception as e:
-            self.prnt(level, e)
+            self.prnt(p_i+i, level, e)
+            raise(e)
         return (-99999, i)
 
     def solve(self):
-        print(self.lines, self.bin)
-        res, _ = self.parse_packets(self.bin, 0)
+        print(self.lines, self.bin, len(self.bin))
+        res, _ = self.parse_packets(self.bin, 0, 0)
         return res
 
 
@@ -163,4 +173,4 @@ def solution(data):
 
 if __name__ == "__main__":
     with(open(path.join(path.dirname(__file__), 'input.txt'), 'r')) as input_file:
-        self.prnt(level, solution(input_file.read()))
+        print(solution(input_file.read()))
