@@ -38,7 +38,6 @@ The five bits labeled C (00101) start with a 0 (last group, end of packet) and c
 The three unlabeled 0 bits at the end are extra due to the hexadecimal representation and should be ignored.
 """
 
-res = []
 
 class Code(object):
     def __init__(self, lines):
@@ -50,37 +49,43 @@ class Code(object):
         print(" "*level, f"{i}:", " ".join([str(x) for x in args]))
 
     def operate(self, level, packet_type_id, nums):
-        res.append(packet_type_id)
         if packet_type_id == 0:
             """Packets with type ID 0 are sum packets - their value is the sum of the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet."""
-            print(" "*level, "sum", nums)
-            return sum(nums)
+            res = sum(nums)
+            print(" "*level, "sum", nums, "=>", res)
+            return res
         elif packet_type_id == 1:
             """Packets with type ID 1 are product packets - their value is the result of multiplying together the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet."""
-            print(" "*level, "product", nums)
-            return math.prod(nums)
+            res = math.prod(nums)
+            print(" "*level, "product", nums, "=>", res)
+            return res
         elif packet_type_id == 2:
             """Packets with type ID 2 are minimum packets - their value is the minimum of the values of their sub-packets."""
-            print(" "*level, "minimum", nums)
-            return min(nums)
+            res = min(nums)
+            print(" "*level, "minimum", nums, "=>", res)
+            return res
         elif packet_type_id == 3:
             """Packets with type ID 3 are maximum packets - their value is the maximum of the values of their sub-packets."""
-            print(" "*level, "maximum", nums)
-            return max(nums)
+            res = max(nums)
+            print(" "*level, "maximum", nums, "=>", res)
+            return res
         elif packet_type_id == 4:
             pass 
         elif packet_type_id == 5:
             """Packets with type ID 5 are greater than packets - their value is 1 if the value of the first sub-packet is greater than the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets."""
-            print(" "*level, "greater than", nums)
-            return 1 if nums[0] > nums[1] else 0
+            res = 1 if nums[0] > nums[1] else 0
+            print(" "*level, "greater than", nums, "=>", res)
+            return res
         elif packet_type_id == 6:
             """Packets with type ID 6 are less than packets - their value is 1 if the value of the first sub-packet is less than the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets."""
-            print(" "*level, "less than", nums)
-            return 1 if nums[0] < nums[1] else 0
+            res = 1 if nums[0] < nums[1] else 0
+            print(" "*level, "less than", nums, "=>", res)
+            return res
         elif packet_type_id == 7:
             """Packets with type ID 7 are equal to packets - their value is 1 if the value of the first sub-packet is equal to the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets."""
-            print(" "*level, "equal to", nums)
-            return 1 if nums[0] == nums[1] else 0
+            res = 1 if nums[0] == nums[1] else 0
+            print(" "*level, "equal to", nums, "=>", res)
+            return res
         return None
 
     def parse_packets(self, txt, level, p_i, stopCnt=0):
@@ -114,10 +119,9 @@ class Code(object):
                         i += 5
                     num = int(num, base=2)
                     nums.append(num)
-                    res.append(packet_type_id)
-                    self.prnt(p_i+i, level, "TYPE number", num)
+                    self.prnt(p_i+i, level, "number: ", num)
                 else:
-                    self.prnt(p_i+i, level, """TYPE: operator""")
+                    # self.prnt(p_i+i, level, """TYPE: operator""")
                     if i >= len(txt):
                         return (i, nums)
                     length_type_id = txt[i]
@@ -155,7 +159,7 @@ class Code(object):
                         if len(subpacket_raw) != 11:
                             raise(Exception("offbyone1"))
                         subpacket_num = int(subpacket_raw, base=2)
-                        self.prnt(p_i+i, level, "found subpackets2", subpacket_num)
+                        # self.prnt(p_i+i, level, "found subpackets2", subpacket_num)
                         nexti, subnums = self.parse_packets(
                             txt[i+12:], level+1, i+p_i, subpacket_num
                         )
@@ -164,7 +168,7 @@ class Code(object):
                         nums.append(vals)
                 read_packet += 1
                 if read_packet == stopCnt:
-                    self.prnt(p_i+i, level, "read enough packets", read_packet, stopCnt)
+                    # self.prnt(p_i+i, level, "read enough packets", read_packet, stopCnt)
                     return (i, nums)
             return (i, nums)
         except Exception as e:
