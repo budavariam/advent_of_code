@@ -1,0 +1,20 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#a4daa0",
+        "activityBar.activeBorder": "#757bc9",
+        "activityBar.background": "#a4daa0",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#757bc9",
+        "activityBarBadge.foreground": "#15202b",
+        "sash.hoverBorder": "#a4daa0"
+    },
+    "peacock.color": "#81cc7b",
+    "python.pythonPath": ".ve/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintPath": ".ve/bin/pylint",
+    "python.linting.pylintArgs": [],
+    "python.formatting.provider": "black"
+
+}

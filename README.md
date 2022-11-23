@@ -11,3 +11,4 @@ I omit my input.txt files from the repository.
 | [2019](./2019/) | Python     | 3.6     |
 | [2020](./2020/) | Python     | 3.8     |
 | [2021](./2021/) | Python     | 3.9     |
+| [2022](./2022/) | Python     | 3.10     |
