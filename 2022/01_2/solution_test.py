@@ -9,7 +9,9 @@ class MyTest(unittest.TestCase):
 
     def test_basic(self):
         """Test from the task"""
-        self.assertEqual(solution("""1000
+        self.assertEqual(
+            solution(
+                """1000
 2000
 3000
 
@@ -22,7 +24,10 @@ class MyTest(unittest.TestCase):
 8000
 9000
 
-10000"""), 45000)
+10000"""
+            ),
+            45000,
+        )
 
 
 if __name__ == "__main__":

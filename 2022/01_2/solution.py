@@ -17,15 +17,15 @@ class Code(object):
 def preprocess(raw_data):
     processed_data = []
     data = []
-    line = ''
+    line = ""
     for line in raw_data.split("\n"):
-        if line != '':
+        if line != "":
             data.append(int(line))
-        elif line == '':
+        elif line == "":
             processed_data.append(data)
             data = []
     # add the last batch
-    if line != '':
+    if line != "":
         processed_data.append(data)
     return processed_data
 
