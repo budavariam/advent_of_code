@@ -22,9 +22,7 @@ class MyTest(unittest.TestCase):
 8000
 9000
 
-10000
-
-"""), 45000)
+10000"""), 45000)
 
 
 if __name__ == "__main__":

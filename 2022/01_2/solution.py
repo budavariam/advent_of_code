@@ -1,8 +1,6 @@
 """ Advent of code 2022 day 01 / 1 """
 
-import math
 from os import path
-import re
 
 
 class Code(object):
@@ -10,26 +8,25 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        # print(self.lines)
         res = []
         for line in self.lines:
             res.append(sum(line))
-            print(line, res)
         return sum(sorted(res, reverse=True)[0:3])
 
 
 def preprocess(raw_data):
-    # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = []
     data = []
+    line = ''
     for line in raw_data.split("\n"):
-        # match = re.match(pattern, line)
-        # data = [match.group(1), match.group(2)]
         if line != '':
             data.append(int(line))
         elif line == '':
             processed_data.append(data)
             data = []
+    # add the last batch
+    if line != '':
+        processed_data.append(data)
     return processed_data
 
 

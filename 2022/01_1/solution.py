@@ -18,17 +18,18 @@ class Code(object):
 
 
 def preprocess(raw_data):
-    # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = []
     data = []
+    line = ''
     for line in raw_data.split("\n"):
-        # match = re.match(pattern, line)
-        # data = [match.group(1), match.group(2)]
         if line != '':
             data.append(int(line))
         elif line == '':
             processed_data.append(data)
             data = []
+    # add the last batch
+    if line != '':
+        processed_data.append(data)
     return processed_data
 
 
