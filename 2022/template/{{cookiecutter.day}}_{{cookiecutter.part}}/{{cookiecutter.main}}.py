@@ -3,6 +3,7 @@
 import math
 from os import path
 import re
+from collections import defaultdict
 
 
 class Code(object):
@@ -10,9 +11,11 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        # print(self.lines)
+        print(self.lines)
+        result = 0
         for line in self.lines:
             pass
+        return result
 
 
 def preprocess(raw_data):
