@@ -16,9 +16,7 @@ def get_filename(curr):
 
 
 def calcsize(structure):
-    print(structure)
     usedspace = 0
-    maxsize = 100000
     res = defaultdict(int)
     folders = sorted(structure.keys(), reverse=True)
     for folder in folders:
@@ -27,27 +25,21 @@ def calcsize(structure):
                 res[folder] += data[1]
             if data[0] == TYPE_DIR:
                 res[folder] += res[folder + f"/{data[1]}"]
-    print("///////////")
-    print(res)
-    # for name, size in res.items():
-    #     # if size <= maxsize:
-    #     usedspace += size
     usedspace = res["/"]
-
     total = 70000000
     need = 30000000
     needspace = need - abs(total - usedspace)
-    freedspace = 0
-    sortedbysize = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
     # sort folders by size and check the first thats ok
+    sortedbysize = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
+    
+    freedspace = 0
     prev = ["a", -1]
     for folder in sortedbysize:
-        name, size = folder
+        _, size = folder
         if size < needspace:
             freedspace = prev[1]
             break
         prev = folder
-
     return freedspace
 
 
@@ -57,39 +49,21 @@ class Code(object):
 
     def solve(self):
         curr = []
-        ls_ongoing = False
         structure = defaultdict(list)
-        print(self.lines)
-        result = 0
-
         for line in self.lines:
             if line[0] == TYPE_DIR:
-                print(TYPE_DIR)
-                _, dirname = line
                 structure[get_filename(curr)].append(line)
             if line[0] == TYPE_FIL:
-                print(TYPE_FIL)
-                _, size, filename = line
                 structure[get_filename(curr)].append(line)
             if line[0] == TYPE_COM:
-                print(TYPE_COM)
                 _, command, param = line
-                if command == "ls":
-                    print(f"listing {curr}")
-                    ls_ongoing = True
                 if command == "cd":
-                    ls_ongoing = False
-                    print(f"moving into {param}")
+                    # print(f"moving into {param}")
                     if param == "..":
                         curr.pop()
                     else:
                         curr.append(param)
-
-            pass
-        print(structure)
-        result = calcsize(structure)
-
-        return result
+        return calcsize(structure)
 
 
 def preprocess(raw_data):
