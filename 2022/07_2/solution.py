@@ -29,18 +29,9 @@ def calcsize(structure):
     total = 70000000
     need = 30000000
     needspace = need - abs(total - usedspace)
-    # sort folders by size and check the first thats ok
-    sortedbysize = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
-    
-    freedspace = 0
-    prev = ["a", -1]
-    for folder in sortedbysize:
-        _, size = folder
-        if size < needspace:
-            freedspace = prev[1]
-            break
-        prev = folder
-    return freedspace
+    dir_sorted_reverse_by_size = sorted(res.items(), key=operator.itemgetter(1), reverse=True)
+    candidates = [size for _, size in dir_sorted_reverse_by_size if size > needspace]
+    return candidates.pop()
 
 
 class Code(object):
