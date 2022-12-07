@@ -1,6 +1,5 @@
-""" Advent of code 2022 day 07 / 1 """
+""" Advent of code 2022 day 07 / 2 """
 
-import math
 from os import path
 import re
 from collections import defaultdict
