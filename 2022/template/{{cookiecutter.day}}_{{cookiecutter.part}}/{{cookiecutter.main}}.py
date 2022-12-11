@@ -4,6 +4,7 @@ import math
 from os import path
 import re
 from collections import defaultdict
+import utils
 
 
 class Code(object):
@@ -17,7 +18,7 @@ class Code(object):
             pass
         return result
 
-
+@utils.profiler
 def preprocess(raw_data):
     # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = []
@@ -28,7 +29,7 @@ def preprocess(raw_data):
         processed_data.append(data)
     return processed_data
 
-
+@utils.profiler
 def solution(data):
     """Solution to the problem"""
     lines = preprocess(data)
