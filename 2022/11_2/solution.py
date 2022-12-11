@@ -2,6 +2,8 @@
 
 from os import path
 import re
+import math
+import utils
 
 
 class Monkey(object):
@@ -41,22 +43,20 @@ class Code(object):
         self.monkeys = lines
 
     def solve(self):
-
-        around_lkkt = 1
-        for m in self.monkeys:
-            around_lkkt *= m.test
+        lcm = math.lcm(*[m.test for m in self.monkeys])
 
         print(self.monkeys)
         for _ in range(10000):
             for m_id in range(len(self.monkeys)):
                 thrown_items = self.monkeys[m_id].round()
                 for (which_m, what) in thrown_items:
-                    self.monkeys[which_m].items.append(what % around_lkkt)
+                    self.monkeys[which_m].items.append(what % lcm)
         self.monkeys.sort(key=lambda x: x.activity_cnt, reverse=True)
 
         return self.monkeys[0].activity_cnt * self.monkeys[1].activity_cnt
 
 
+@utils.profiler
 def preprocess(raw_data):
     processed_data = []
     for m_data in raw_data.split("\n\n"):
@@ -76,7 +76,7 @@ def preprocess(raw_data):
         processed_data.append(m)
     return processed_data
 
-
+@utils.profiler
 def solution(data):
     """Solution to the problem"""
     lines = preprocess(data)
