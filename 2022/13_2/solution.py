@@ -2,6 +2,7 @@
 
 from os import path
 from pprint import pprint
+from functools import total_ordering
 import utils
 
 
@@ -9,6 +10,7 @@ PACKET_A = [[2]]
 PACKET_B = [[6]]
 
 
+@total_ordering
 class Sortable:
     def __init__(self, data):
         self.data = data
