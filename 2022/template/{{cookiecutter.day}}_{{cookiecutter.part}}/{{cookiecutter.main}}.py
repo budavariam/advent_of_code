@@ -1,6 +1,7 @@
 """ Advent of code 2022 day {{cookiecutter.day}} / {{cookiecutter.part}} """
 
 import math
+from pprint import pprint
 from os import path
 import re
 from collections import defaultdict
@@ -12,7 +13,7 @@ class Code(object):
         self.lines = lines
 
     def solve(self):
-        print(self.lines)
+        pprint(self.lines)
         result = 0
         for line in self.lines:
             pass
