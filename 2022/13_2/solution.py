@@ -1,9 +1,7 @@
 """ Advent of code 2022 day 13 / 2 """
 
-import math
 from os import path
-import re
-from collections import defaultdict
+from pprint import pprint
 import utils
 
 
@@ -12,11 +10,20 @@ PACKET_B = [[6]]
 
 
 class Sortable:
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
 
+    def __lt__(self, other):
+        return self.cmp(self.data, other.data)
+
+    def __eq__(self, other):
+        return self.cmp(self.data, other) is None
+
+    def __repr__(self):
+        return f"<{self.data}>"
+
     def cmp(self, a, b):
-        print(f"Comparing: {a} - {b}")
+        # print(f"Comparing: {a} - {b}")
         if isinstance(a, int) and isinstance(b, int):
             """
             If both values are integers, the lower integer should come first.
@@ -28,15 +35,15 @@ class Sortable:
             val_b = b
             # lower = min(val_a, val_b)
             if val_a < val_b:
-                print(f"{val_a} < {val_b}")
+                # print(f"{val_a} < {val_b}")
                 return True
                 # continue # ???
                 # return True # ???
             elif val_a > val_b:
-                print(f"{val_b} < {val_a}")
+                # print(f"{val_b} < {val_a}")
                 return False
             else:
-                print(f"{val_a} == {val_b}")
+                # print(f"{val_a} == {val_b}")
                 return None
         if isinstance(a, list) and isinstance(b, int):
             """
@@ -64,44 +71,28 @@ class Sortable:
                 return None
         return None
 
-    def __lt__(self,other):
-        return self.cmp(self.data, other.data)
-    def __eq__(self,other):
-        return self.cmp(self.data, other) is None
 
 class Code(object):
     def __init__(self, lines):
         self.lines = lines
 
-    # def comparator(self, a, b):
-    #     res = self.cmp(a, b)
-    #     if res == True:
-    #         return 1
-    #     elif res == False:
-    #         return -1
-    #     return 0
-
     def solve(self):
-        print(self.lines)
-        data = [Sortable(x) for x in self.lines]
-        result = sorted(data)
+        pprint(self.lines)
+        result = sorted(self.lines)
         return (result.index(PACKET_A) + 1) * (result.index(PACKET_B) + 1)
 
 
 @utils.profiler
 def preprocess(raw_data):
-    # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = [
         PACKET_A,
         PACKET_B,
     ]
     for line in raw_data.split("\n"):
-        # match = re.match(pattern, line)
-        # data = [match.group(1), match.group(2)]
         if line == "":
             continue
         processed_data.append(eval(line))
-    return processed_data
+    return [Sortable(x) for x in processed_data]
 
 
 @utils.profiler
