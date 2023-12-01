@@ -1,4 +1,4 @@
-""" Advent of code 2023 day 01 / 1 """
+""" Advent of code 2023 day 01 / 2 """
 
 import math
 from pprint import pprint
@@ -11,10 +11,10 @@ import utils
 num = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 numrev = [n[::-1] for n in num]
 
-def findnum(txt, values, ptrn):
-    # ptrn = f"({'|'.join(map(str,range(0,10)))}|{'|'.join(pattern)})"
+
+def findnum(txt, values):
+    ptrn = f"({'|'.join(map(str,range(0,10)))}|{'|'.join(values)})"
     grp = re.search(ptrn, txt)
-    print(grp)
     if grp is not None:
         raw = grp.group(1)
         if len(raw) == 1:
@@ -24,6 +24,7 @@ def findnum(txt, values, ptrn):
     print(f"ERROR IN PATTERN {txt} {ptrn}")
     return -1
 
+
 class Code(object):
     def __init__(self, lines):
         self.lines = lines
@@ -32,8 +33,8 @@ class Code(object):
         pprint(self.lines)
         result = 0
         for line in self.lines:
-            n1 = findnum(line, num, r"(0|1|2|3|4|5|6|7|8|9|one|two|three|four|five|six|seven|eight|nine)")
-            n2 = findnum(line[::-1], numrev, r"(0|1|2|3|4|5|6|7|8|9|eno|owt|eerht|ruof|evif|xis|neves|thgie|enin)")
+            n1 = findnum(line, num)
+            n2 = findnum(line[::-1], numrev)
 
             result += int(f"{n1}{n2}")
         return result

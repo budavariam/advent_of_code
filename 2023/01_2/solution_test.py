@@ -1,4 +1,4 @@
-""" Advent of code 2023 day 01 / 1 """
+""" Advent of code 2023 day 01 / 2 """
 
 import unittest
 from solution import solution
