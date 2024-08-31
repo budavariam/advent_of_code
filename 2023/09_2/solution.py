@@ -29,16 +29,16 @@ class Code(object):
             curr_line = next_line
             if all_zeroes:
                 finished = True
-        print(original, lines)
+        # print(original, lines)
         next_extrapolated = 0
         for x in range(len(lines)):
             add_value = lines[x][0]
             next_extrapolated += add_value
-            print(add_value)
+            # print(add_value)
         return next_extrapolated
 
     def solve(self):
-        pprint(self.lines)
+        # pprint(self.lines)
         result = 0
         for line in self.lines:
             result += self.calc_next_extrapolated(line)
