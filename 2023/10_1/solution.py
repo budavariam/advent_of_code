@@ -87,7 +87,7 @@ class Code(object):
                 raise NameError(f" . START POSITION {self.curr}")
             case _:
                 raise ValueError(f" . ERROR at {self.curr}")
-        print("  " + msg)
+        # print("  " + msg)
 
         return (y, x, d)
 
@@ -101,23 +101,24 @@ class Code(object):
             try:
                 next_y, next_x = add(curr, DIRECTIONS[next_d])
                 direction = OPP_DIRECTIONS[next_d]
-                print(f"ENTERING ({next_y},{next_x}) from {direction} #{distance}")
+                # print(f"ENTERING ({next_y},{next_x}) from {direction} #{distance}")
                 if (
                     next_y >= self.maxh
                     or next_y < 0
                     or next_x >= self.maxw
                     or next_x < 0
                 ):
-                    print(f"  Over bounds!")
+                    # print(f"  Over bounds!")
+                    continue
                 y, x, d = self.step_on_matrix((next_y, next_x), direction)
                 queue.append(((y, x), d, distance + 1))
-            except NameError as n:
-                print(f"  Back to start {n}, {curr}, {next_d}, {distance}")
+            except NameError:
+                # print(f"  Back to start {n}, {curr}, {next_d}, {distance}")
                 result.append(distance + 1)
-
-            except ValueError as v:
-                print(v)
-        print(result)
+            except ValueError:
+                # print(v)
+                pass
+        # print(result)
         return max(result) // 2
 
 
