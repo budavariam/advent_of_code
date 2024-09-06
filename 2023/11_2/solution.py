@@ -6,9 +6,10 @@ import heapq
 from os import path
 import re
 from collections import deque
+from functools import total_ordering
 from itertools import combinations
 import utils
-import math
+import cmath
 
 
 FOUR_NEIGHBOR = [
@@ -17,19 +18,52 @@ FOUR_NEIGHBOR = [
     (0, 1),
     (0, -1),
 ]
+EXPANSION_RATE = 1
+# LT = 0
+# NEW = 0
+
+# @total_ordering
+class CustomComplex(complex):
+    """Imaginary part is the huge distance, real part is a real number"""
+
+    def __new__(cls, real, imag=0):
+        # n_real = real
+        # n_imag = imag
+        # if real > EXPANSION_RATE:
+        #     how_many_times = real // EXPANSION_RATE
+        #     n_real = real % EXPANSION_RATE
+        #     n_imag = imag + how_many_times
+        # return super().__new__(cls, real=n_real, imag=n_imag)
+
+        return super().__new__(cls, real=real % EXPANSION_RATE, imag=imag + (real // EXPANSION_RATE))
+
+    def __eq__(self, other):
+        # global NEW
+        # NEW += 1
+        return self.imag == other.imag and self.real == other.real
+
+    def __lt__(self, other):
+        # global LT
+        # LT += 1
+        if self.imag == other.imag:
+            return self.real < other.real
+        else:
+            return self.imag < other.imag
+
+    def __abs__(self) -> int:
+        return int(self.imag) * int(EXPANSION_RATE) + int(self.real)
 
 
 class Code(object):
-    def __init__(self, lines, expansion_rate):
+    def __init__(self, lines):
         self.galaxy_locations = lines["galaxy_locations"]
         self.empty_rows = lines["empty_rows"]
         self.empty_cols = lines["empty_cols"]
         self.maxw = lines["maxw"]
         self.maxh = lines["maxh"]
-        self.expansion_rate = expansion_rate
 
     def shortest_paths(self, start):
-        queue = [(0, start[0], start[1])]
+        queue = [(CustomComplex(0), start[0], start[1])]
         visited = set()
         distances = {}
         while queue:
@@ -46,20 +80,10 @@ class Code(object):
                     continue
 
                 expansion = 0
-                # if we move up (d_y == -1) and go into an empty row (n_y in self.empty_row), then we need to expand the distance by 1
-                if d_y == -1 and a_y in self.empty_rows:
-                    expansion += self.expansion_rate - 1
-                # if we move left (d_x == -1) and go into an empty col (n_x in self.empty_col), then we need to expand the distance by 1
-                elif d_x == -1 and a_x in self.empty_cols:
-                    expansion += self.expansion_rate - 1
-                # ...
-                elif d_y == 1 and a_y in self.empty_rows:
-                    expansion += self.expansion_rate - 1
-                # ...
-                elif d_x == 1 and a_x in self.empty_cols:
-                    expansion += self.expansion_rate - 1
-
-                new_distance = c_len + 1 + expansion
+                # if we move up (d_y == -1) and go into an empty row (n_y in self.empty_row), then we need to expand the distance by 1 and so on...
+                if (d_y != 0 and a_y in self.empty_rows) or (d_x != 0 and a_x in self.empty_cols):
+                    expansion += 1
+                new_distance = CustomComplex(c_len.real + 1, c_len.imag + expansion)
                 if (a_y, a_x) not in distances or new_distance < distances[(a_y, a_x)]:
                     distances[(a_y, a_x)] = new_distance
                     heapq.heappush(queue, (new_distance, a_y, a_x))
@@ -68,8 +92,10 @@ class Code(object):
 
     def solve(self):
         res = {}
+        # global LT, NEW
         for i, g in enumerate(self.galaxy_locations):
             print(f"Calculating for: {i+1}/{len(self.galaxy_locations)}")
+            # print(f"Calculating for: {i+1}/{len(self.galaxy_locations)} {LT}, {NEW}")
             distances_from_galaxy = self.shortest_paths(g)
             res[g] = {
                 other: distances_from_galaxy.get(other, -1)
@@ -77,7 +103,10 @@ class Code(object):
                 if other != g
             }
         res = sum(
-            [res[g1][g2] for g1, g2 in list(combinations(self.galaxy_locations, 2))]
+            [
+                abs(res[g1][g2])
+                for g1, g2 in list(combinations(self.galaxy_locations, 2))
+            ]
         )
         return res
 
@@ -113,7 +142,9 @@ def preprocess(raw_data):
 def solution(data, expansion_rate):
     """Solution to the problem"""
     lines = preprocess(data)
-    solver = Code(lines, expansion_rate)
+    global EXPANSION_RATE
+    EXPANSION_RATE = expansion_rate - 1
+    solver = Code(lines)
     return solver.solve()
 
 
