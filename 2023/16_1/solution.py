@@ -35,6 +35,7 @@ class Photon(object):
         if not (
             0 <= y < self.max_y and 0 <= x < self.max_x
         ):
+            self.active = False
             return is_valid, spawns
         curr_tile = matrix[y][x]
 
@@ -100,7 +101,10 @@ class Photon(object):
             spawns = []
             for new_dir in horizontal_splitter[self.direction]:
                 new_pos = add(self.pos, DIRECTIONS[new_dir])
-                spawns.append(Photon(new_pos, new_dir, self.max_y, self.max_x))
+                if (
+                    0 <= new_pos[0] < self.max_y and 0 <= new_pos[1] < self.max_x
+                ):
+                    spawns.append(Photon(new_pos, new_dir, self.max_y, self.max_x))
         elif curr_tile == "|":
             vertical_splitter = {
                 "N": ["N"],
@@ -112,7 +116,10 @@ class Photon(object):
             spawns = []
             for new_dir in vertical_splitter[self.direction]:
                 new_pos = add(self.pos, DIRECTIONS[new_dir])
-                spawns.append(Photon(new_pos, new_dir, self.max_y, self.max_x))
+                if (
+                    0 <= new_pos[0] < self.max_y and 0 <= new_pos[1] < self.max_x
+                ):
+                  spawns.append(Photon(new_pos, new_dir, self.max_y, self.max_x))
         return is_valid, spawns
 
 
@@ -144,17 +151,19 @@ class Code(object):
         max_y = len(self.lines)
         max_x = len(self.lines[0])
         visited = set([])
+        cache = set([])
         beams = deque([Photon((0, 0), "E", max_y, max_x)])
         inactive_beams = []
         i = 0
         while len(beams) > 0:
             i+= 1
-            if i%100000 == 0:
-                self.print_map(visited)
             curr = beams.popleft()
-            # if curr.pos in visited:
-            #     continue
-            visited.add(curr.pos)
+            cache_key = (curr.direction, curr.pos[0], curr.pos[1])
+            if cache_key in cache:
+                continue
+            if curr.active:
+                visited.add(curr.pos)
+            cache.add(cache_key)
             is_valid, spawns = curr.move(self.lines)
             beams.extend(spawns)
             if not is_valid:
@@ -162,6 +171,7 @@ class Code(object):
             else:
                 beams.append(curr)
 
+        # print(visited)
         result = len(visited)
         return result
 
