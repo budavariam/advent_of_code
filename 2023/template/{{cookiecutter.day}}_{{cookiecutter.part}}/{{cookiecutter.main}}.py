@@ -5,7 +5,7 @@ from pprint import pprint
 from os import path
 import re
 from collections import defaultdict
-import utils
+from utils import log, profiler
 
 
 class Code(object):
@@ -19,7 +19,8 @@ class Code(object):
             pass
         return result
 
-@utils.profiler
+
+@profiler
 def preprocess(raw_data):
     # pattern = re.compile(r'(\w+) (\d+)')
     processed_data = []
@@ -30,7 +31,8 @@ def preprocess(raw_data):
         processed_data.append(data)
     return processed_data
 
-@utils.profiler
+
+@profiler
 def solution(data):
     """Solution to the problem"""
     lines = preprocess(data)
@@ -39,5 +41,7 @@ def solution(data):
 
 
 if __name__ == "__main__":
-    with (open(path.join(path.dirname(__file__), "{{cookiecutter.inputfilename}}.txt"), "r")) as input_file:
+    with open(
+        path.join(path.dirname(__file__), "{{cookiecutter.inputfilename}}.txt"), "r"
+    ) as input_file:
         print(solution(input_file.read()))
