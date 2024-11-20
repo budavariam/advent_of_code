@@ -42,6 +42,8 @@ def solution(data):
 
 if __name__ == "__main__":
     with open(
-        path.join(path.dirname(__file__), "{{cookiecutter.inputfilename}}.txt"), "r"
+        path.join(path.dirname(__file__), "{{cookiecutter.inputfilename}}.txt"),
+        "r",
+        encoding="utf-8",
     ) as input_file:
         print(solution(input_file.read()))
