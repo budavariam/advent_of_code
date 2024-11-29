@@ -281,4 +281,4 @@ if __name__ == "__main__":
         encoding="utf-8",
     ) as input_file:
         # Set visualize=True to enable 3D visualization
-        log.debug(solution(input_file.read(), visualize=False))
+        print(solution(input_file.read(), visualize=False))
