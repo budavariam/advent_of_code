@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Solution Test",
+      "name": "Python: Test Solution",
       "type": "debugpy",
       "request": "launch",
       "program": "${fileDirname}/solution_test.py",
