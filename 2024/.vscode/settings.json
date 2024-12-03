@@ -1,15 +1,15 @@
 {
     "workbench.colorCustomizations": {
-        "activityBar.activeBackground": "#a4daa0",
+        "activityBar.activeBackground": "#92b1e9",
         "activityBar.activeBorder": "#757bc9",
-        "activityBar.background": "#a4daa0",
+        "activityBar.background": "#92b1e9",
         "activityBar.foreground": "#15202b",
         "activityBar.inactiveForeground": "#15202b99",
-        "activityBarBadge.background": "#757bc9",
-        "activityBarBadge.foreground": "#15202b",
-        "sash.hoverBorder": "#a4daa0"
+        "activityBarBadge.background": "#d42b67",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "sash.hoverBorder": "#92b1e9"
     },
-    "peacock.color": "#81cc7b",
+    "peacock.color": "#6892e0",
     "python.pythonPath": ".ve/bin/python",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
