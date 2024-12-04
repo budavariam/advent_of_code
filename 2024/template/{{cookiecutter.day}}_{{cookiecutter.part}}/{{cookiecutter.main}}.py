@@ -27,7 +27,7 @@ def preprocess(raw_data):
     for line in raw_data.split("\n"):
         # match = re.match(pattern, line)
         # data = [match.group(1), match.group(2)]
-        data = line
+        data = list(line)
         processed_data.append(data)
     return processed_data
 
