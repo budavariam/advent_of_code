@@ -1,4 +1,4 @@
-# 2023
+# 2024
 
 I use python 3.11 on mac with pyenv.
 
@@ -6,6 +6,7 @@ I use python 3.11 on mac with pyenv.
 pyenv shell 3.11.4
 python3 -m venv .ve
 . ./.ve/bin/activate
+python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 
 ./init.py 1 1
