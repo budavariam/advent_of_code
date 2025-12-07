@@ -1,0 +1,7 @@
+{
+    "day": "00",
+    "part": "1",
+    "inputfilename": "input",
+    "main": "solution",
+    "test": "solution_test"
+}
