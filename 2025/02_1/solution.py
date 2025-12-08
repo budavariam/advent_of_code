@@ -1,4 +1,4 @@
-""" Advent of code 2024 day 02 / 1 """
+""" Advent of code 2025 day 02 / 1 """
 
 import math
 from pprint import pprint

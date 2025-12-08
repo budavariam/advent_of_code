@@ -1,4 +1,4 @@
-""" Advent of code 2024 day {{cookiecutter.day}} / {{cookiecutter.part}} """
+""" Advent of code 2025 day {{cookiecutter.day}} / {{cookiecutter.part}} """
 
 import math
 from pprint import pprint
