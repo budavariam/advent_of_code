@@ -27,21 +27,19 @@ impl Position {
 }
 
 fn solution(input: &str) -> String {
-    let mut santa_turn = true;
     let mut santa_curr_pos = Position { x: 0, y: 0 };
     let mut robo_curr_pos = Position { x: 0, y: 0 };
     let mut visited: HashSet<Position> = HashSet::new();
     visited.insert(santa_curr_pos);
 
-    for ch in input.chars() {
-        if santa_turn {
-            santa_curr_pos.step(ch);
-            visited.insert(santa_curr_pos);
+    for (i, ch) in input.chars().enumerate() {
+        let pos = if i % 2 == 0 {
+            &mut santa_curr_pos
         } else {
-            robo_curr_pos.step(ch);
-            visited.insert(robo_curr_pos);
-        }
-        santa_turn = !santa_turn;
+            &mut robo_curr_pos
+        };
+        pos.step(ch);
+        visited.insert(*pos);
     }
     visited.len().to_string()
 }
