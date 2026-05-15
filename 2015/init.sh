@@ -58,8 +58,12 @@ EOF
 cat > "./${folder}/src/main.rs" <<'EOF'
 use std::fs;
 
-fn solution(_input: &str) -> String {
-    String::new()
+fn solution(input: &str) -> String {
+    let mut result = 0;
+    for line in input.lines() {
+        result += 1;
+    }
+    result.to_string()
 }
 
 fn main() {
