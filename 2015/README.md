@@ -1,6 +1,6 @@
 # 2015
 
-I use rust on mac.
+I use rust 2015 edition on mac.
 
 ```bash
 cargo run # run the day
