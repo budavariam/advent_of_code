@@ -1,0 +1,5 @@
+You fill the weather machine with fifty stars. It comes to life!
+
+Snow begins to fall.
+
+Congratulations! You've finished every puzzle in Advent of Code 2015! I hope you had as much fun solving them as I had making them for you.
