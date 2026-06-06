@@ -1,26 +1,42 @@
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy)]
+pub enum RunMode {
+    UntilHalt,
+    UntilFirstOutput,
+}
+
+#[derive(Debug, Clone, Copy)]
 pub enum Mode {
     Position,
     Immediate,
+    Relative,
 }
 
+#[derive(Debug)]
 pub struct Machine {
     ip: usize,
+    rb: isize,
     memory: Vec<isize>,
     output: Vec<isize>,
     input: VecDeque<isize>,
+    run_mode: RunMode,
 }
 
 impl Machine {
     pub fn new(code: Vec<isize>) -> Self {
         Machine {
             ip: 0,
+            rb: 0,
             memory: code,
             output: Vec::new(),
             input: VecDeque::new(),
+            run_mode: RunMode::UntilHalt,
         }
+    }
+
+    pub fn set_run_mode(&mut self, mode: RunMode) {
+        self.run_mode = mode;
     }
 
     pub fn parse_program(input: &str) -> Vec<isize> {
@@ -43,8 +59,19 @@ impl Machine {
         &self.output
     }
 
-    pub fn get_memory_at(&self, i: usize) -> isize {
+    pub fn get_memory_at(&mut self, i: usize) -> isize {
+        if self.memory.len() <= i {
+            self.memory.resize(i + 1, 0);
+        }
         self.memory.get(i).cloned().unwrap()
+    }
+
+    fn set_memory_at(&mut self, i: usize, value: isize) -> isize {
+        if self.memory.len() <= i {
+            self.memory.resize(i + 1, 0);
+        }
+        self.memory[i] = value;
+        value
     }
 
     pub fn parse_opcode(instruction: isize) -> (isize, Vec<Mode>) {
@@ -55,6 +82,7 @@ impl Machine {
         while modes_num > 0 {
             let mode = match modes_num % 10 {
                 1 => Mode::Immediate,
+                2 => Mode::Relative,
                 _ => Mode::Position,
             };
             param_modes.push(mode);
@@ -67,19 +95,45 @@ impl Machine {
         param_modes.get(index).copied().unwrap_or(Mode::Position)
     }
 
-    pub fn read_param(&self, ip: usize, offset: usize, mode: Mode) -> isize {
+    pub fn read_param(&mut self, ip: usize, offset: usize, mode: Mode) -> isize {
         match mode {
             Mode::Position => {
-                let addr = self.memory[ip + offset] as usize;
-                self.memory[addr]
+                let addr: usize = self
+                    .get_memory_at(ip + offset)
+                    .try_into()
+                    .expect("Memory address shall be positive");
+                self.get_memory_at(addr)
             }
-            Mode::Immediate => self.memory[ip + offset],
+            Mode::Relative => {
+                let offset_val = self.get_memory_at(ip + offset);
+                let addr: usize = (self.rb + offset_val)
+                    .try_into()
+                    .expect("Memory address shall be positive");
+                self.get_memory_at(addr)
+            }
+            Mode::Immediate => self.get_memory_at(ip + offset),
+        }
+    }
+
+    pub fn resolve_addr(&mut self, ip: usize, offset: usize, mode: Mode) -> usize {
+        match mode {
+            Mode::Position => self
+                .get_memory_at(ip + offset)
+                .try_into()
+                .expect("Memory address shall be positive"),
+            Mode::Relative => {
+                let offset_val = self.get_memory_at(ip + offset);
+                (self.rb + offset_val)
+                    .try_into()
+                    .expect("Memory address shall be positive")
+            }
+            Mode::Immediate => panic!("Immediate mode is invalid for a write target"),
         }
     }
 
     pub fn start(&mut self) -> Option<isize> {
         loop {
-            let (instruction, param_modes) = Machine::parse_opcode(self.memory[self.ip]);
+            let (instruction, param_modes) = Machine::parse_opcode(self.get_memory_at(self.ip));
 
             match instruction {
                 99 => return None,
@@ -87,25 +141,29 @@ impl Machine {
                 1 => {
                     let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     let b = self.read_param(self.ip, 2, Machine::get_mode(&param_modes, 1));
-                    let pos_target = self.memory[self.ip + 3] as usize;
-                    self.memory[pos_target] = a + b;
+                    let pos_target: usize =
+                        self.resolve_addr(self.ip, 3, Machine::get_mode(&param_modes, 2));
+                    self.set_memory_at(pos_target, a + b);
                     self.ip += 4;
                 }
 
                 2 => {
                     let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     let b = self.read_param(self.ip, 2, Machine::get_mode(&param_modes, 1));
-                    let pos_target = self.memory[self.ip + 3] as usize;
-                    self.memory[pos_target] = a * b;
+                    let pos_target: usize =
+                        self.resolve_addr(self.ip, 3, Machine::get_mode(&param_modes, 2));
+                    self.set_memory_at(pos_target, a * b);
                     self.ip += 4;
                 }
 
                 3 => {
-                    let pos_target = self.memory[self.ip + 1] as usize;
-                    self.memory[pos_target] = self
+                    let pos_target: usize =
+                        self.resolve_addr(self.ip, 1, Machine::get_mode(&param_modes, 0));
+                    let value = self
                         .input
                         .pop_front()
                         .expect("input queue is empty but opcode 3 was reached");
+                    self.set_memory_at(pos_target, value);
                     self.ip += 2;
                 }
 
@@ -113,7 +171,10 @@ impl Machine {
                     let value = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     self.output.push(value);
                     self.ip += 2;
-                    return Some(value);
+                    match self.run_mode {
+                        RunMode::UntilFirstOutput => return Some(value),
+                        _ => (),
+                    }
                 }
 
                 /* Opcode 5 is jump-if-true:
@@ -149,8 +210,9 @@ impl Machine {
                 7 => {
                     let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     let b = self.read_param(self.ip, 2, Machine::get_mode(&param_modes, 1));
-                    let pos_target = self.memory[self.ip + 3] as usize;
-                    self.memory[pos_target] = if a < b { 1 } else { 0 };
+                    let pos_target: usize =
+                        self.resolve_addr(self.ip, 3, Machine::get_mode(&param_modes, 2));
+                    self.set_memory_at(pos_target, if a < b { 1 } else { 0 });
                     self.ip += 4;
                 }
                 /* Opcode 8 is equals:
@@ -161,9 +223,15 @@ impl Machine {
                 8 => {
                     let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     let b = self.read_param(self.ip, 2, Machine::get_mode(&param_modes, 1));
-                    let pos_target = self.memory[self.ip + 3] as usize;
-                    self.memory[pos_target] = if a == b { 1 } else { 0 };
+                    let pos_target: usize =
+                        self.resolve_addr(self.ip, 3, Machine::get_mode(&param_modes, 2));
+                    self.set_memory_at(pos_target, if a == b { 1 } else { 0 });
                     self.ip += 4;
+                }
+                9 => {
+                    let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
+                    self.rb += a;
+                    self.ip += 2;
                 }
                 _ => panic!("Unknown opcode {} at ip {}", instruction, self.ip),
             }
