@@ -5,7 +5,7 @@ use std::{
 
 use num::integer::gcd;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 struct Asteroid {
     y: i16,
     x: i16,
@@ -21,7 +21,7 @@ impl Asteroid {
         let new_x = self.x;
         let scale = gcd(new_x, new_y);
         // println!("normalize: {self} ({new_y},{new_x})x{scale}");
-        return (new_y / scale, new_x / scale);
+        (new_y / scale, new_x / scale)
     }
 }
 
@@ -48,15 +48,6 @@ impl std::ops::Sub for Asteroid {
             y: self.y - rhs.y,
             x: self.x - rhs.x,
         }
-    }
-}
-
-impl std::cmp::PartialEq for Asteroid {
-    fn eq(&self, other: &Self) -> bool {
-        self.x == other.x && self.y == other.y
-    }
-    fn ne(&self, other: &Self) -> bool {
-        self.x != other.x || self.y != other.y
     }
 }
 
