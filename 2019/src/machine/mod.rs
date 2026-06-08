@@ -74,7 +74,7 @@ impl Machine {
         value
     }
 
-    pub fn parse_opcode(instruction: isize) -> (isize, Vec<Mode>) {
+    fn parse_opcode(instruction: isize) -> (isize, Vec<Mode>) {
         let opcode = instruction % 100;
         let mut modes_num = instruction / 100;
         let mut param_modes = Vec::new();
@@ -95,7 +95,7 @@ impl Machine {
         param_modes.get(index).copied().unwrap_or(Mode::Position)
     }
 
-    pub fn read_param(&mut self, ip: usize, offset: usize, mode: Mode) -> isize {
+    fn read_param(&mut self, ip: usize, offset: usize, mode: Mode) -> isize {
         match mode {
             Mode::Position => {
                 let addr: usize = self
@@ -115,7 +115,7 @@ impl Machine {
         }
     }
 
-    pub fn resolve_addr(&mut self, ip: usize, offset: usize, mode: Mode) -> usize {
+    fn resolve_addr(&mut self, ip: usize, offset: usize, mode: Mode) -> usize {
         match mode {
             Mode::Position => self
                 .get_memory_at(ip + offset)
@@ -131,7 +131,16 @@ impl Machine {
         }
     }
 
+    pub fn next(&mut self) -> Option<isize> {
+        self.run_mode = RunMode::UntilFirstOutput;
+        self.code_loop()
+    }
     pub fn start(&mut self) -> Option<isize> {
+        self.run_mode = RunMode::UntilHalt;
+        self.code_loop()
+    }
+
+    fn code_loop(&mut self) -> Option<isize> {
         loop {
             let (instruction, param_modes) = Machine::parse_opcode(self.get_memory_at(self.ip));
 
