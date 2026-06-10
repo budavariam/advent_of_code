@@ -247,3 +247,10 @@ impl Machine {
         }
     }
 }
+
+#[macro_export]
+macro_rules! intcode_out {
+    ($first:literal $(, $rest:literal)* $(,)?) => {
+        concat!("104,", $first $(, ",104,", $rest)*, ",99")
+    };
+}
