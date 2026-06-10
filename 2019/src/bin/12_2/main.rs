@@ -1,16 +1,14 @@
+use num::integer::lcm;
 use regex::Regex;
-use std::collections::HashSet;
-use std::collections::hash_map::DefaultHasher;
 use std::fs;
-use std::hash::{Hash, Hasher};
 
-fn hash_vec<T: Hash>(vec: &Vec<T>) -> u64 {
-    let mut hasher = DefaultHasher::new();
-    vec.hash(&mut hasher);
-    hasher.finish()
+enum Axis {
+    X,
+    Y,
+    Z,
 }
 
-#[derive(Hash, Copy, Clone)]
+#[derive(Copy, Clone)]
 struct Coord {
     x: i32,
     y: i32,
@@ -39,7 +37,7 @@ impl std::ops::Add for Coord {
     }
 }
 
-#[derive(Hash, Copy, Clone)]
+#[derive(Copy, Clone)]
 struct Moon {
     pos: Coord,
     vel: Coord,
@@ -67,7 +65,15 @@ impl Moon {
     fn repr(&self) -> String {
         format!("pos={}, vel={}", self.pos.repr(), self.pos.repr())
     }
-    fn apply_gravity(a: &mut Moon, b: &mut Moon) {
+    fn apply_gravity(a: &mut Moon, b: &mut Moon, axis: &Axis) {
+        match axis {
+            Axis::X => Moon::apply_gravity_x(a, b),
+            Axis::Y => Moon::apply_gravity_y(a, b),
+            Axis::Z => Moon::apply_gravity_z(a, b),
+        }
+    }
+
+    fn apply_gravity_x(a: &mut Moon, b: &mut Moon) {
         // a Gx3+1, b: Cx5-1
         if a.pos.x > b.pos.x {
             a.vel.x += -1;
@@ -76,6 +82,8 @@ impl Moon {
             a.vel.x += 1;
             b.vel.x += -1;
         };
+    }
+    fn apply_gravity_y(a: &mut Moon, b: &mut Moon) {
         if a.pos.y > b.pos.y {
             a.vel.y += -1;
             b.vel.y += 1;
@@ -83,6 +91,8 @@ impl Moon {
             a.vel.y += 1;
             b.vel.y += -1;
         }
+    }
+    fn apply_gravity_z(a: &mut Moon, b: &mut Moon) {
         if a.pos.z > b.pos.z {
             a.vel.z += -1;
             b.vel.z += 1;
@@ -91,58 +101,54 @@ impl Moon {
             b.vel.z += -1;
         }
     }
-    /**
-     * The total energy for a single moon is its potential energy multiplied by its kinetic energy.
-     *
-     * A moon's potential energy is the sum of the absolute values of its x, y, and z position coordinates.
-     * A moon's kinetic energy is the sum of the absolute values of its velocity coordinates.
-     */
-    fn total_energy(&self) -> i32 {
-        let pot = self.pos.x.abs() + self.pos.y.abs() + self.pos.z.abs();
-        let kin = self.vel.x.abs() + self.vel.y.abs() + self.vel.z.abs();
-        pot * kin
+
+    fn get_axis_state(&self, axis: &Axis) -> (i32, i32) {
+        match axis {
+            Axis::X => (self.pos.x, self.vel.x),
+            Axis::Y => (self.pos.y, self.vel.y),
+            Axis::Z => (self.pos.z, self.vel.z),
+        }
+    }
+
+    fn get_all_state(moons: &Vec<Moon>, axis: &Axis) -> Vec<(i32, i32)> {
+        moons.iter().map(|m| m.get_axis_state(axis)).collect()
     }
 }
 
 fn solution(input: &str) -> String {
-    let mut step = 0;
     let pt = Regex::new(r"<x=(?P<x>-?\d+), y=(?P<y>-?\d+), z=(?P<z>-?\d+)>").unwrap();
     let mut moons: Vec<Moon> = input.lines().map(|m| Moon::parse(m, &pt)).collect();
-    let mut hsh = hash_vec(&moons);
-    let mut visited: HashSet<u64> = HashSet::new();
-    let result = loop {
-        if step % 100_000 == 0 {
-            println!("{step}");
-        }
-        // 1. apply gravity to change velocities
-        for i in 0..moons.len() {
-            for j in i + 1..moons.len() {
-                //let m1 = &mut moons[i];
-                //let m2 = &mut moons[j];
-                let (m1, m2) = get_two_mut(&mut moons, i, j);
-                Moon::apply_gravity(m1, m2);
+    let mut step: [u128; 3] = [0, 0, 0];
+
+    for (i, axis) in [Axis::X, Axis::Y, Axis::Z].iter().enumerate() {
+        let initial_state: Vec<(i32, i32)> = Moon::get_all_state(&moons, &axis);
+        let mut state: Vec<(i32, i32)> = vec![];
+        while state != initial_state {
+            // 1. apply gravity to change velocities
+            for i in 0..moons.len() {
+                for j in i + 1..moons.len() {
+                    //let m1 = &mut moons[i];
+                    //let m2 = &mut moons[j];
+                    let (m1, m2) = get_two_mut(&mut moons, i, j);
+                    Moon::apply_gravity(m1, m2, &axis);
+                }
             }
-        }
-        // 2. apply velocity to move the moon's position:w
-        moons.iter_mut().for_each(|m| {
-            m.pos = m.pos + m.vel;
-        });
+            // 2. apply velocity to move the moon's position:w
+            moons.iter_mut().for_each(|m| {
+                m.pos = m.pos + m.vel;
+            });
 
-        /*println!("After {step} steps:");
-        for m in &moons {
-            println!("{}", m.repr());
-        }*/
-        hsh = hash_vec(&moons);
-        if visited.contains(&hsh) {
-            break step;
+            /*println!("After {step} steps:");
+            for m in &moons {
+                println!("{}", m.repr());
+            }*/
+            state = Moon::get_all_state(&moons, &axis);
+            step[i] += 1;
         }
-        visited.insert(hsh);
-        step += 1;
-    };
+    }
 
-    result.to_string()
+    lcm(lcm(step[0], step[1]), step[2]).to_string()
 }
-
 fn main() {
     let input = fs::read_to_string("input.txt").expect("Failed to read input.txt");
     let answer = solution(&input);
