@@ -126,6 +126,10 @@ impl Machine {
         }
     }
 
+    pub fn start(&mut self) -> StepResult {
+        self.code_loop()
+    }
+
     pub fn step(&mut self) -> StepResult {
         self.code_loop()
     }

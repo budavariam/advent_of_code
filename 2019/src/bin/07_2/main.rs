@@ -1,10 +1,10 @@
 extern crate itertools;
 
-use aoc2019::machine::Machine;
+use aoc2019::machine::{Machine, StepResult};
 use itertools::{Itertools, enumerate};
 use std::fs;
 
-fn amplifier(machine: &mut Machine, input: isize) -> Option<isize> {
+fn amplifier(machine: &mut Machine, input: isize) -> StepResult {
     machine.push_input(input);
     machine.start()
 }
@@ -23,10 +23,10 @@ fn amplifier_loop(code: &Vec<isize>, sequence: Vec<isize>) -> isize {
     'outer: loop {
         for (i, _) in enumerate(&sequence) {
             match amplifier(&mut machines[i], output) {
-                Some(out) => {
+                StepResult::Output(out) => {
                     output = out;
                 }
-                None => {
+                _ => {
                     break 'outer;
                 }
             }
