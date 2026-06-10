@@ -1,9 +1,10 @@
 use std::collections::VecDeque;
 
-#[derive(Debug, Clone, Copy)]
-pub enum RunMode {
-    UntilHalt,
-    UntilFirstOutput,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StepResult {
+    Output(isize),
+    NeedsInput,
+    Halted,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -20,7 +21,6 @@ pub struct Machine {
     memory: Vec<isize>,
     output: Vec<isize>,
     input: VecDeque<isize>,
-    run_mode: RunMode,
 }
 
 impl Machine {
@@ -31,12 +31,7 @@ impl Machine {
             memory: code,
             output: Vec::new(),
             input: VecDeque::new(),
-            run_mode: RunMode::UntilHalt,
         }
-    }
-
-    pub fn set_run_mode(&mut self, mode: RunMode) {
-        self.run_mode = mode;
     }
 
     pub fn parse_program(input: &str) -> Vec<isize> {
@@ -66,7 +61,7 @@ impl Machine {
         self.memory.get(i).cloned().unwrap()
     }
 
-    fn set_memory_at(&mut self, i: usize, value: isize) -> isize {
+    pub fn set_memory_at(&mut self, i: usize, value: isize) -> isize {
         if self.memory.len() <= i {
             self.memory.resize(i + 1, 0);
         }
@@ -131,21 +126,16 @@ impl Machine {
         }
     }
 
-    pub fn next(&mut self) -> Option<isize> {
-        self.run_mode = RunMode::UntilFirstOutput;
-        self.code_loop()
-    }
-    pub fn start(&mut self) -> Option<isize> {
-        self.run_mode = RunMode::UntilHalt;
+    pub fn step(&mut self) -> StepResult {
         self.code_loop()
     }
 
-    fn code_loop(&mut self) -> Option<isize> {
+    fn code_loop(&mut self) -> StepResult {
         loop {
             let (instruction, param_modes) = Machine::parse_opcode(self.get_memory_at(self.ip));
 
             match instruction {
-                99 => return None,
+                99 => return StepResult::Halted,
 
                 1 => {
                     let a = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
@@ -168,10 +158,11 @@ impl Machine {
                 3 => {
                     let pos_target: usize =
                         self.resolve_addr(self.ip, 1, Machine::get_mode(&param_modes, 0));
-                    let value = self
-                        .input
-                        .pop_front()
-                        .expect("input queue is empty but opcode 3 was reached");
+
+                    let Some(value) = self.input.pop_front() else {
+                        return StepResult::NeedsInput;
+                    };
+
                     self.set_memory_at(pos_target, value);
                     self.ip += 2;
                 }
@@ -180,10 +171,7 @@ impl Machine {
                     let value = self.read_param(self.ip, 1, Machine::get_mode(&param_modes, 0));
                     self.output.push(value);
                     self.ip += 2;
-                    match self.run_mode {
-                        RunMode::UntilFirstOutput => return Some(value),
-                        _ => (),
-                    }
+                    return StepResult::Output(value);
                 }
 
                 /* Opcode 5 is jump-if-true:
@@ -244,6 +232,17 @@ impl Machine {
                 }
                 _ => panic!("Unknown opcode {} at ip {}", instruction, self.ip),
             }
+        }
+    }
+}
+
+impl Iterator for Machine {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.code_loop() {
+            StepResult::Output(value) => Some(value),
+            StepResult::NeedsInput | StepResult::Halted => None,
         }
     }
 }
