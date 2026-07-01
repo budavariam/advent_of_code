@@ -18,8 +18,8 @@ impl State {
     }
 }
 
-fn generate_it_sequence(nth: i32) -> impl Iterator<Item=(i32, i8)> {
-    let mut st= State::Negative;
+fn generate_it_sequence(nth: i32) -> impl Iterator<Item = (i32, i8)> {
+    let mut st = State::Negative;
     (0_i32..).filter_map(move |i| {
         if i % nth == 0 {
             st = State::next_state(st);
@@ -27,36 +27,26 @@ fn generate_it_sequence(nth: i32) -> impl Iterator<Item=(i32, i8)> {
         match st {
             State::Positive => Some((i, 1)),
             State::Negative => Some((i, -1)),
-            _ => None
+            _ => None,
         }
     })
 }
 
-fn apply_phase(txt: &str) -> String {
+fn apply_phase(txt: Vec<u8>) -> Vec<u8> {
     let l = txt.len();
-    //println!("Apply phase for: {}", txt);
-    let mut result: String = "".to_string();
+    let mut result: Vec<u8> = Vec::with_capacity(l);
     for i in 0..l {
         let mut r = 0i32;
         let nth: i32 = i.try_into().expect("index number shall fit");
-        let sq = generate_it_sequence(nth + 1).take_while(|(x,_)| *x <= l as i32);
+        let sq = generate_it_sequence(nth + 1).take_while(|(x, _)| *x <= l as i32);
         for (x, t) in sq {
-            let char_index = (x-1) as usize;
-            let v: i32 = txt
-                .chars()
-                .nth(char_index)
-                .expect("should be number")
-                .to_digit(10)
-                .expect("should be a number")
-                .try_into()
-                .expect("should be a number");
-            let xx = v * (t as i32);
+            let char_index = (x - 1) as usize;
+            let v = *txt.get(char_index).expect("should be number") as i32;
+            let xx = v * t as i32;
             r += xx;
-            //println!("  {v}*{t}={xx}");
         }
         r = r.abs() % 10;
-        //println!("CHAR: {r}");
-        result.push_str(&r.to_string());
+        result.push(r as u8);
     }
     result
 }
@@ -64,19 +54,27 @@ fn apply_phase(txt: &str) -> String {
 
 
 fn solution(input: &str) -> String {
-    let mut curr = input.to_string();
+    let mut curr: Vec<u8> = input.bytes().map(|b| b - b'0').collect();
     let phase_cnt = 100;
-    for phc in 0..phase_cnt {
-        println!("{phc}");
-        let nxt = apply_phase(&curr);
+    for _phc in 0..phase_cnt {
+        // println!("{_phc}");
+        let nxt = apply_phase(curr.clone());
         curr = nxt;
         //println!("{}", curr);
     }
-    curr.get(0..8).expect("shall be longer than 8 chars").to_string()
+    curr.get(0..8)
+        .expect("shall be longer than 8 chars")
+        .iter()
+        .map(|b| b.to_string())
+        .collect::<Vec<String>>()
+        .join("")
 }
 
 fn main() {
-    let input = fs::read_to_string("input.txt").expect("Failed to read input.txt").trim().to_string();
+    let input = fs::read_to_string("input.txt")
+        .expect("Failed to read input.txt")
+        .trim()
+        .to_string();
     let answer = solution(&input);
 
     println!("Answer: {}", answer);
